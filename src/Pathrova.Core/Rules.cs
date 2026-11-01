@@ -119,8 +119,12 @@ public static class Rules
     }
 
     /// <summary>Sicherer Ersatzname für die gefundenen Namensprobleme, oder null, wenn nichts zu ändern ist bzw. nichts Sicheres möglich ist.</summary>
-    /// <param name="maxLength">Höchste Länge des neuen Namens (zum Kürzen bei zu langen Pfaden), null = nur Regeln.</param>
-    public static string? Suggest(string name, bool isDirectory, bool atRoot, CheckOptions o, int? maxLength = null)
+    /// <param name="maxLength">Höchste Länge des neuen Namens, null = nur Regeln.</param>
+    public static string? Suggest(string name, bool isDirectory, bool atRoot, CheckOptions o, int? maxLength = null) =>
+        Suggest(name, isDirectory, atRoot, o, maxLength is { } m ? n => n.Length <= m : null);
+
+    /// <param name="fits">Prüft, ob ein Kandidat kurz genug ist (z. B. Pfadlänge in der Cloud), null = nur Regeln.</param>
+    public static string? Suggest(string name, bool isDirectory, bool atRoot, CheckOptions o, Func<string, bool>? fits)
     {
         // Systemdateien und temporäre Office-Dateien nicht umbenennen.
         if (NotSyncedNames.Contains(name) || name.StartsWith("~$", StringComparison.Ordinal)) return null;
@@ -133,21 +137,44 @@ public static class Rules
         if (isDirectory && s.Length > 0 && (s[0] == '゛' || s[0] == 'ဧ')) s = "_" + s;
         var (stem, ext) = Split(s, isDirectory);
         if (Devices.Contains(stem.TrimEnd(' ')) || (atRoot && s.Equals("forms", StringComparison.OrdinalIgnoreCase))) stem += "_";
-        int limit = Math.Min(255, maxLength ?? 255);
-        if (stem.Length + ext.Length > limit)
+        bool Ok(string st) => st.Length + ext.Length <= 255 && (fits is null || fits(st + ext));
+        if (!Ok(stem))
         {
-            int keep = limit - ext.Length;
-            if (keep < 8) return null;
-            stem = stem[..keep];
-            // Möglichst an einer Wortgrenze enden.
-            int space = stem.LastIndexOfAny([' ', '-', '_']);
-            if (space >= Math.Max(8, keep - 12)) stem = stem[..space];
-            stem = stem.TrimEnd(' ', '.', '-', '_', '–');
-            if (char.IsHighSurrogate(stem[^1])) stem = stem[..^1];
+            stem = Shorten(stem, Ok);
+            if (stem.Length == 0) return null;
         }
         s = stem + ext;
         if (s.Length == 0) s = "_";
         return s == name ? null : s;
+    }
+
+    /// <summary>Kürzt behutsam: erst Gedankenstriche mit Leerzeichen zu „-“ (spart kodiert viel), dann Wörter aus der Mitte entfernen;
+    /// das erste Wort und ein letztes Wort mit Ziffern (Version, Datum) bleiben. Leer = nicht sicher möglich.</summary>
+    public static string Shorten(string stem, Func<string, bool> ok)
+    {
+        var s = System.Text.RegularExpressions.Regex.Replace(stem, @"\s+[–—-]\s+", "-");
+        s = System.Text.RegularExpressions.Regex.Replace(s, @"\s{2,}", " ");
+        if (ok(s)) return s;
+        // Wörter samt Trennzeichen davor (Leerzeichen oder „-“), damit „7-freigegeben“ zwei Wörter sind.
+        var words = System.Text.RegularExpressions.Regex.Matches(s, @"[ -]?[^ -]+").Select(m => m.Value).ToList();
+        string? keepTail = words.Count > 1 && words[^1].Any(char.IsDigit) ? words[^1] : null;
+        if (keepTail is not null) words.RemoveAt(words.Count - 1);
+        while (words.Count > 1)
+        {
+            words.RemoveAt(words.Count - 1);
+            var cand = string.Concat(words).TrimEnd('-', '_', '.', ',') + (keepTail is null ? "" : (keepTail[0] is ' ' or '-' ? keepTail : " " + keepTail));
+            if (cand.Length >= 8 && ok(cand)) return cand;
+        }
+        // Ein einziges langes Wort: Zeichen von hinten abschneiden.
+        var one = words.Count == 1 ? words[0].TrimStart(' ', '-') : s;
+        for (int n = one.Length - 1; n >= 8; n--)
+        {
+            var cand = one[..n];
+            if (char.IsHighSurrogate(cand[^1])) continue;
+            cand += keepTail ?? "";
+            if (ok(cand)) return cand;
+        }
+        return "";
     }
 
     public static (string Stem, string Ext) Split(string name, bool isDirectory)

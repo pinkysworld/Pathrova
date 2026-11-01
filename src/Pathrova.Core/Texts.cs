@@ -46,8 +46,11 @@ public sealed class Texts
     public string Done(ScanResult r) => T(
         $"{Format.Number(r.Files, false)} Dateien und {Format.Number(r.Folders, false)} Ordner in {r.Duration.TotalSeconds:0.0} s geprüft{(r.Cancelled ? " (abgebrochen, unvollständig)" : "")}.",
         $"Checked {Format.Number(r.Files, true)} files and {Format.Number(r.Folders, true)} folders in {r.Duration.TotalSeconds:0.0} s{(r.Cancelled ? " (cancelled, incomplete)" : "")}.");
-    public string Empty => T("Ordner wählen und „Prüfen“ klicken. Es wird nichts verändert.", "Choose a folder and click “Check”. Nothing is changed.");
+    public string Empty => T("Ordner, Laufwerk oder Netzwerkfreigabe oben wählen oder hierher ziehen und „Prüfen“ klicken. Beim Prüfen wird nichts verändert.", "Choose or drop a folder, drive or network share above and click “Check”. Checking changes nothing.");
     public string NoIssues => T("Keine Probleme gefunden.", "No issues found.");
+    public string About => T("Über Pathrova", "About Pathrova");
+    public string AboutPrivacy => T("Offline, kein Konto, keine Telemetrie. © 2026 Minh Studios.", "Offline, no account, no telemetry. © 2026 Minh Studios.");
+    public string Fixable => T("automatisch behebbar", "fixable automatically");
     public string All => T("Alle", "All");
     public string Errors => T("Fehler", "Errors");
     public string Warnings => T("Warnungen", "Warnings");

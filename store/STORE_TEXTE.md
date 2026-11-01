@@ -12,7 +12,7 @@ Preis: 14,99 € mit 7-Tage-Testversion (Store) und Kaufkraftstaffel (siehe `doc
 
 Hinweis an die Zertifizierung: „Pathrova ist eine Offline-App ohne Konto. Zum Test einen beliebigen Ordner wählen (z. B. Dokumente) und ‚Prüfen‘ klicken. Die App ändert nichts, solange der Nutzer Umbenennungen nicht in der Vorschau bestätigt; jede Umbenennung lässt sich rückgängig machen. runFullTrust wird für den Dateisystemzugriff einer Win32-(.NET-)Desktop-App benötigt.“
 
-Screenshots (1366 × 820, hell und dunkel): `store/screenshots/{de,en}/{light,dark}/1-overview, 2-long-paths, 3-rules, 4-rename-preview`.
+**Store-Bilder (hochladen, in dieser Reihenfolge):** `store/screenshots/{de,en}/marketing/1–5` (1920 × 1080 mit Überschrift: Überblick, Umbenennen mit Rückgängig, Nahaufnahme 461/400, Regeln, Bericht/dunkel). Erzeugt mit `tools/compose_store_screenshots.py` aus den Roh-Aufnahmen `store/screenshots/{de,en}/{light,dark}/` (1366 × 820, aus den UI-Tests).
 
 ---
 
@@ -21,7 +21,7 @@ Screenshots (1366 × 820, hell und dunkel): `store/screenshots/{de,en}/{light,da
 **Titel:** Pathrova – Pfadprüfer für Cloud-Migration
 
 **Kurzbeschreibung:**
-Findet zu lange Pfade, ungültige Zeichen und gesperrte Namen, bevor du Ordner nach OneDrive oder SharePoint synchronisierst oder migrierst. Alles in einem Durchgang statt Fehler für Fehler. Mit sicheren Umbenennungsvorschlägen samt Rückgängig, außerdem CSV- und PDF-Bericht. Offline, ohne Konto.
+Findet vor der Migration alle Pfade und Namen, die OneDrive und SharePoint ablehnen – in einem Durchgang. Danach sicher umbenennen mit Vorschau und Rückgängig, Bericht als CSV oder PDF. Offline, ohne Konto.
 
 **Beschreibung:**
 Der Sync-Client meldet Probleme erst während der Synchronisierung, und zwar eins nach dem anderen: „Pfad zu lang“, „ungültiger Name“, „Datei kann nicht hochgeladen werden“. Bei einem Dateiserver mit zehntausenden Ordnern kann das Tage kosten.
@@ -85,7 +85,7 @@ Hinweis: Pathrova prüft und zeigt an. Es garantiert nicht, dass eine Synchronis
 **Title:** Pathrova – Path Checker for Cloud Migration
 
 **Short description:**
-Find paths that are too long, invalid characters and blocked names before you sync or migrate folders to OneDrive or SharePoint, all in one pass instead of error by error. Includes safe rename suggestions with undo and CSV and PDF reports. Works offline, no account.
+Finds every path and name that OneDrive and SharePoint will reject – before you migrate, in one pass. Then rename safely with preview and undo, and export a CSV or PDF report. Offline, no account.
 
 **Description:**
 The sync client reports problems only while syncing, one at a time: “path too long”, “invalid name”, “can't upload”. On a file server with tens of thousands of folders that can take days.

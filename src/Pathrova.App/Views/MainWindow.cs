@@ -26,6 +26,8 @@ public sealed class MainWindow : Window
     private ProgressBar _progress = null!;
     private ListBox _groups = null!, _list = null!;
     private Expander _options = null!;
+    private StackPanel _kpis = null!;
+    private Control _body = null!, _empty = null!;
 
     private ScanResult? _result;
     private List<RenameOp> _plan = [];
@@ -64,15 +66,12 @@ public sealed class MainWindow : Window
 
         var logo = new Image { Width = 28, Height = 28 };
         try { logo.Source = new Avalonia.Media.Imaging.Bitmap(Avalonia.Platform.AssetLoader.Open(new Uri("avares://Pathrova/Assets/logo.png"))); } catch (Exception) { }
-        var tagline = new TextBlock { Text = T.Tagline, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-        tagline.Classes.Add("muted");
         var settingsBtn = new Button { Content = "⚙  " + T.Settings, Flyout = SettingsMenu() };
         settingsBtn.Classes.Add("ghost");
         AutomationProperties.SetName(settingsBtn, T.Settings);
         var header = new Grid { ColumnDefinitions = new("Auto,Auto,*,Auto"), ColumnSpacing = 12 };
         header.Children.Add(logo);
         var name = Ui.Text("Pathrova", "h2"); Grid.SetColumn(name, 1); header.Children.Add(name);
-        Grid.SetColumn(tagline, 2); header.Children.Add(tagline);
         Grid.SetColumn(settingsBtn, 3); header.Children.Add(settingsBtn);
 
         _folder = new TextBox { Text = folderText, PlaceholderText = T.FolderHint };
@@ -98,11 +97,12 @@ public sealed class MainWindow : Window
         Put(Ui.Text(T.Blocked), 2, 0); Put(_blocked, 2, 1);
         var checks = new WrapPanel { ItemSpacing = 18, Children = { _encoded, _hash, _office } };
         Put(checks, 3, 1);
-        _options = new Expander { Header = T.Options, Content = optGrid, IsExpanded = false, HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 6, 0, 0) };
+        _options = new Expander { Header = OptionsHeader(), Content = optGrid, IsExpanded = false, HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 6, 0, 0) };
         _options.Classes.Add("options");
         AutomationProperties.SetAutomationId(_options, "Options");
 
-        _status = new TextBlock { Text = T.Empty, TextWrapping = TextWrapping.Wrap };
+        _kpis = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 28, IsVisible = false };
+        _status = new TextBlock { Text = "", TextWrapping = TextWrapping.Wrap };
         _status.Classes.Add("muted");
         _progress = new ProgressBar { IsIndeterminate = true, IsVisible = false, Height = 4, MinHeight = 4 };
 
@@ -127,24 +127,23 @@ public sealed class MainWindow : Window
         var body = new Grid { ColumnDefinitions = new("330,*"), ColumnSpacing = 14 };
         body.Children.Add(groupsCard);
         Grid.SetColumn(listPanel, 1); body.Children.Add(listPanel);
+        _body = body;
+        _empty = EmptyState();
 
         _rename = Ui.Button(T.Rename, () => _ = OpenRename(), "primary", "Rename");
         _undo = Ui.Button(T.Undo, () => _ = UndoLast(), automationId: "Undo");
         _csv = Ui.Button("⇩  " + T.ExportCsv, () => _ = Export("csv"), automationId: "ExportCsv");
         _pdf = Ui.Button("⇩  " + T.ExportPdf, () => _ = Export("pdf"), automationId: "ExportPdf");
-        var disclaimer = new TextBlock { Text = T.Disclaimer, TextWrapping = TextWrapping.Wrap, FontSize = 12, VerticalAlignment = VerticalAlignment.Center };
-        disclaimer.Classes.Add("muted");
         var actions = new Grid { ColumnDefinitions = new("*,Auto"), ColumnSpacing = 16 };
-        actions.Children.Add(disclaimer);
         var buttons = Ui.Row(8, _undo, _csv, _pdf, _rename); Grid.SetColumn(buttons, 1); actions.Children.Add(buttons);
 
         var root = new DockPanel { Margin = new Thickness(20, 14, 20, 16) };
-        var top = Ui.Column(12, header, Ui.Card(Ui.Column(4, folderRow, _options), new Thickness(14, 12)), Ui.Column(6, _status, _progress));
+        var top = Ui.Column(12, header, Ui.Card(Ui.Column(4, folderRow, _options), new Thickness(14, 12)), Ui.Column(6, _kpis, _status, _progress));
         top.Margin = new Thickness(0, 0, 0, 12);
         DockPanel.SetDock(top, Dock.Top); root.Children.Add(top);
         actions.Margin = new Thickness(0, 12, 0, 0);
         DockPanel.SetDock(actions, Dock.Bottom); root.Children.Add(actions);
-        root.Children.Add(body);
+        root.Children.Add(new Panel { Children = { body, _empty } });
         Content = root;
 
         DragDrop.SetAllowDrop(this, true);
@@ -158,6 +157,43 @@ public sealed class MainWindow : Window
         });
 
         if (_result is not null) ShowResult(); else UpdateButtons();
+        _body.IsVisible = _result is not null; _empty.IsVisible = _result is null && _cts is null;
+    }
+
+    private Control EmptyState()
+    {
+        var icon = new Image { Width = 72, Height = 72 };
+        try { icon.Source = new Avalonia.Media.Imaging.Bitmap(Avalonia.Platform.AssetLoader.Open(new Uri("avares://Pathrova/Assets/logo.png"))); } catch (Exception) { }
+        var head = new TextBlock { Text = T.Tagline, TextWrapping = TextWrapping.Wrap, FontSize = 20, FontWeight = FontWeight.SemiBold, TextAlignment = TextAlignment.Center, MaxWidth = 640 };
+        var hint = new TextBlock { Text = T.Empty, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center, MaxWidth = 560 };
+        hint.Classes.Add("muted");
+        var note = new TextBlock { Text = T.Disclaimer, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center, MaxWidth = 560, FontSize = 12 };
+        note.Classes.Add("muted");
+        var col = Ui.Column(14, icon, head, hint, note);
+        col.HorizontalAlignment = HorizontalAlignment.Center; col.VerticalAlignment = VerticalAlignment.Center;
+        icon.HorizontalAlignment = HorizontalAlignment.Center;
+        return Ui.Card(col, new Thickness(32));
+    }
+
+    private string OptionsHeader() => $"{T.Options}   ·   {T.Target}: {Rules.CloudPath(O, "")}/…   ·   {(O.CountEncoded ? T.Counting(true) : T.Counting(false))}";
+
+    private Control Kpi(string value, string label, string brush)
+    {
+        var v = new TextBlock { Text = value, FontSize = 28, FontWeight = FontWeight.SemiBold };
+        v.BindBrush(TextBlock.ForegroundProperty, brush);
+        var l = Ui.Text(label, "muted", 13);
+        var c = Ui.Column(0, v, l);
+        AutomationProperties.SetName(c, $"{value} {label}");
+        return c;
+    }
+
+    /// <summary>Kürzt lange Pfade in der Mitte: Anfang (Laufwerk/Server) und Dateiname bleiben sichtbar.</summary>
+    public static string MiddleEllipsis(string path, int max = 150)
+    {
+        if (path.Length <= max) return path;
+        int tail = Math.Min(path.Length - path.LastIndexOfAny(['\\', '/']) + 30, max * 2 / 3);
+        int head = max - tail - 1;
+        return path[..head] + "…" + path[^tail..];
     }
 
     private TextBox Field(string value, string hint, string label, string id)
@@ -192,7 +228,9 @@ public sealed class MainWindow : Window
             item.Click += (_, _) => SetLanguage(key);
             lang.Items.Add(item);
         }
-        m.Items.Add(theme); m.Items.Add(lang);
+        var about = new MenuItem { Header = T.About };
+        about.Click += (_, _) => _ = Confirm.Ask(this, "Pathrova 1.0", T.Disclaimer + "\n\n" + T.AboutPrivacy, "OK", T.Close);
+        m.Items.Add(theme); m.Items.Add(lang); m.Items.Add(new Separator()); m.Items.Add(about);
         return m;
     }
 
@@ -221,6 +259,7 @@ public sealed class MainWindow : Window
     {
         if (_cts is not null) return;
         Capture();
+        _options.Header = OptionsHeader();
         var folder = _settings.LastFolder;
         if (!Directory.Exists(folder)) { _status.Text = T.NotFound; return; }
         _settings.Save();
@@ -229,6 +268,7 @@ public sealed class MainWindow : Window
         _progress.IsVisible = true;
         _rename.IsEnabled = _csv.IsEnabled = _pdf.IsEnabled = false;
         _status.Text = T.Scanning(0, 0);
+        _empty.IsVisible = false;
         var progress = new Progress<ScanProgress>(p => _status.Text = T.Scanning(p.Files, p.Folders));
         try
         {
@@ -258,6 +298,14 @@ public sealed class MainWindow : Window
         _groups.ItemsSource = groups;
         _groups.SelectedItem = groups.FirstOrDefault(g => g.Kind == _kindFilter && g.Severity == (_kindFilter is null ? _severityFilter : g.Severity)) ?? groups[0];
         _status.Text = T.Done(r) + " " + (r.Issues.Count == 0 ? T.NoIssues : "");
+        long Sum(Severity s) => r.Issues.Where(i => i.Severity == s).Sum(i => 1L + i.Inside);
+        _kpis.Children.Clear();
+        _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Error), _settings.English), T.Errors, "Error"));
+        _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Warning), _settings.English), T.Warnings, "Warn"));
+        _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Info), _settings.English), T.Infos, "Info"));
+        _kpis.Children.Add(Kpi(Format.Number(_plan.Count, _settings.English), T.Fixable, "Accent"));
+        _kpis.IsVisible = true;
+        _body.IsVisible = true; _empty.IsVisible = false;
         Refresh();
     }
 
@@ -291,8 +339,7 @@ public sealed class MainWindow : Window
 
     private Control GroupRow(GroupItem g)
     {
-        var dot = new Border { Width = 9, Height = 9, CornerRadius = new CornerRadius(5), VerticalAlignment = VerticalAlignment.Center, IsVisible = g.Severity is not null };
-        if (g.Severity is { } s) dot.BindBrush(Border.BackgroundProperty, Ui.SeverityBrushKey(s));
+        Control dot = g.Severity is { } s ? Ui.SeverityBadge(s) : new Panel { Width = 16 };
         var label = Ui.Text(g.Label, g.Kind is null ? "h2" : null, g.Kind is null ? 14 : 13.5);
         var count = new Border { Classes = { "count" }, CornerRadius = new CornerRadius(9), Padding = new Thickness(8, 1), Child = Ui.Text(Format.Number(g.Count, _settings.English), size: 12) };
         var grid = new Grid { ColumnDefinitions = new("Auto,*,Auto"), ColumnSpacing = 8, Margin = new Thickness(g.Kind is null && g.Severity is not null ? 0 : g.Kind is null ? 0 : 10, 7, 6, 7) };
@@ -309,17 +356,18 @@ public sealed class MainWindow : Window
         var kind = Ui.Text(r.Kind, size: 12);
         kind.FontWeight = FontWeight.SemiBold;
         kind.BindBrush(TextBlock.ForegroundProperty, Ui.SeverityBrushKey(r.Issue.Severity));
-        var path = Ui.Text(r.Path);
-        path.TextTrimming = TextTrimming.PrefixCharacterEllipsis;
+        var path = Ui.Text(MiddleEllipsis(r.Path));
         ToolTip.SetTip(path, r.Issue.FullPath);
         var line2 = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 14 };
-        line2.Children.Add(kind);
+        line2.Children.Add(Ui.Row(6, Ui.SeverityBadge(r.Issue.Severity), kind));
         if (r.Detail.Length > 0) line2.Children.Add(Ui.Text(r.Detail, "muted", 12));
         if (r.Proposal is { } p) { var prop = Ui.Text("→ " + p, size: 12); prop.BindBrush(TextBlock.ForegroundProperty, "Accent"); line2.Children.Add(prop); }
-        var col = Ui.Column(2, path, line2);
-        col.Margin = new Thickness(10, 6);
-        AutomationProperties.SetName(col, $"{r.Kind}: {r.Issue.FullPath}");
-        return col;
+        var col = Ui.Column(3, path, line2);
+        col.Margin = new Thickness(12, 9);
+        var row = new Border { Child = col, BorderThickness = new Thickness(0, 0, 0, 1) };
+        row.BindBrush(Border.BorderBrushProperty, "Line");
+        AutomationProperties.SetName(row, $"{r.Kind}: {r.Issue.FullPath}");
+        return row;
     }
 
     private async Task OpenRename()

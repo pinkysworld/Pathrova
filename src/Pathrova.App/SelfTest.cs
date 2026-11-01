@@ -15,7 +15,7 @@ public static class SelfTest
             var deep = root;
             for (int i = 0; i < 8; i++) deep = Directory.CreateDirectory(Path.Combine(deep, new string((char)('a' + i), 50))).FullName;
             File.WriteAllText(Path.Combine(deep, "tief.txt"), "x");
-            File.WriteAllText(Path.Combine(root, "Angebot .docx"), "x");
+            File.WriteAllText(Path.Combine(root, " Angebot.docx"), "x");
             File.WriteAllText(Path.Combine(root, "CON.txt.bak"), "x");
             File.WriteAllText(Path.Combine(root, "Notiz#1.txt"), "x");
             var o = new CheckOptions { TargetPrefix = "Documents", LocalRoot = @"C:\Users\Test\OneDrive - Firma" };
@@ -27,7 +27,7 @@ public static class SelfTest
             var after = Scanner.Scan(root, o);
             bool fixedSpace = !after.Issues.Any(i => i.Kind == IssueKind.LeadingTrailingSpace) && File.Exists(Path.Combine(root, "Angebot.docx"));
             var undo = Renamer.Undo(done.Log);
-            bool restored = File.Exists(Path.Combine(root, "Angebot .docx")) && undo.Failures.Count == 0;
+            bool restored = File.Exists(Path.Combine(root, " Angebot.docx")) && undo.Failures.Count == 0;
             Reports.WritePdf(Path.Combine(root, "r.pdf"), r, r.Issues, false);
             Reports.WriteCsv(Path.Combine(root, "r.csv"), r, r.Issues, true);
             bool ok = found && done.Failures.Count == 0 && fixedSpace && restored && new FileInfo(Path.Combine(root, "r.pdf")).Length > 500;

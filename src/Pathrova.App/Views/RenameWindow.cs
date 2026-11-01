@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -62,17 +63,44 @@ public sealed class RenameWindow : Window
         var box = new CheckBox { IsChecked = o.Selected, VerticalAlignment = VerticalAlignment.Center };
         AutomationProperties.SetName(box, o.OldName);
         box.IsCheckedChanged += (_, _) => { o.Selected = box.IsChecked == true; Update(); };
-        var from = Ui.Text(o.OldName);
-        var to = Ui.Text(o.NewName); to.FontWeight = FontWeight.SemiBold; to.BindBrush(TextBlock.ForegroundProperty, "Accent");
+        var from = Diff(o.OldName, o.NewName, false);
+        var to = Diff(o.NewName, o.OldName, true);
         var rel = Ui.Text(o.RelativePath, "muted", 12);
-        var names = new Grid { ColumnDefinitions = new("*,Auto,*"), ColumnSpacing = 10 };
-        names.Children.Add(from);
-        var arrow = Ui.Text("→", "muted"); Grid.SetColumn(arrow, 1); names.Children.Add(arrow);
+        var names = new Grid { ColumnDefinitions = new("*,28,*"), ColumnSpacing = 10 };
+        names.Children.Add(Ui.Column(1, from, rel));
+        var arrow = Ui.Text("→", "muted"); arrow.HorizontalAlignment = HorizontalAlignment.Center; Grid.SetColumn(arrow, 1); names.Children.Add(arrow);
         Grid.SetColumn(to, 2); names.Children.Add(to);
+        var col = names;
         var grid = new Grid { ColumnDefinitions = new("Auto,*"), ColumnSpacing = 10, Margin = new Thickness(8, 5) };
         grid.Children.Add(box);
-        var col = Ui.Column(1, names, rel); Grid.SetColumn(col, 1); grid.Children.Add(col);
-        return grid;
+        Grid.SetColumn(col, 1); grid.Children.Add(col);
+        var line = new Border { Child = grid, BorderThickness = new Thickness(0, 0, 0, 1) };
+        line.BindBrush(Border.BorderBrushProperty, "Line");
+        return line;
+    }
+
+    /// <summary>Hebt nur den geänderten Mittelteil hervor (gemeinsamer Anfang und Ende bleiben normal).</summary>
+    public static TextBlock Diff(string text, string other, bool isNew)
+    {
+        int pre = 0;
+        while (pre < text.Length && pre < other.Length && text[pre] == other[pre]) pre++;
+        int suf = 0;
+        while (suf < text.Length - pre && suf < other.Length - pre && text[^(suf + 1)] == other[^(suf + 1)]) suf++;
+        var tb = new TextBlock { TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
+        tb.Inlines!.Add(new Run(text[..pre]));
+        var mid = text[pre..(text.Length - suf)];
+        // Entfernte Leerzeichen sichtbar machen.
+        var shown = isNew ? mid : mid.Replace(' ', '␣');
+        if (shown.Length > 0)
+        {
+            var run = new Run(shown) { FontWeight = FontWeight.Bold, TextDecorations = isNew ? null : TextDecorations.Strikethrough };
+            run.BindBrush(TextElement.ForegroundProperty, isNew ? "Accent" : "Error");
+            tb.Inlines.Add(run);
+        }
+        else if (!isNew) { }
+        tb.Inlines.Add(new Run(text[(text.Length - suf)..]));
+        ToolTip.SetTip(tb, text);
+        return tb;
     }
 
     private async Task Go()

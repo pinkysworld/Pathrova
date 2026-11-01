@@ -103,9 +103,9 @@ public class UiTests
             var w = await Scanned(d, english);
             w.ShowFolderText();
             Save(w, Path.Combine(dir, "1-overview.png"));
-            var g = w.Groups.ItemsSource!.Cast<object>().First(x => x.ToString()!.Contains(english ? "Path too long (cloud" : "Pfad zu lang (Cloud"));
+            var g = w.Groups.ItemsSource!.Cast<object>().First(x => x.ToString()!.Contains(english ? "Label = Errors" : "Label = Fehler"));
             w.Groups.SelectedItem = g; Dispatcher.UIThread.RunJobs();
-            Save(w, Path.Combine(dir, "2-long-paths.png"));
+            Save(w, Path.Combine(dir, "2-errors.png"));
             w.ExpandOptions(); w.Groups.SelectedIndex = 0; Dispatcher.UIThread.RunJobs();
             Save(w, Path.Combine(dir, "3-rules.png"));
             var rw = new RenameWindow(w.Plan.ToList(), Texts.For(english), w.Result!.Root) { Width = 1100, Height = 700 };

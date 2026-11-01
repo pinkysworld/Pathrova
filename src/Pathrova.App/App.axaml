@@ -22,7 +22,7 @@
           <SolidColorBrush x:Key="Info" Color="#1F6FD1"/>
           <SolidColorBrush x:Key="Warn" Color="#B85A12"/>
           <SolidColorBrush x:Key="Newer" Color="#7442C8"/>
-          <SolidColorBrush x:Key="Error" Color="#C02848"/>
+          <SolidColorBrush x:Key="Error" Color="#B42318"/>
           <SolidColorBrush x:Key="Same" Color="#3E7F51"/>
           <SolidColorBrush x:Key="Danger" Color="#B3261E"/>
         </ResourceDictionary>

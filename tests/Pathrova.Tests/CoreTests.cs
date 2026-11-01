@@ -228,3 +228,15 @@ public class CoreTests
 
     private sealed class SyncProgress<T>(Action<T> a) : IProgress<T> { public void Report(T v) => a(v); }
 }
+
+public class ShortenTests
+{
+    [Fact]
+    public void KeepsVersionNumbersAndDropsDashesFirst()
+    {
+        Assert.Equal("Schnitte A-A und B-B-Revision 4", Rules.Shorten("Schnitte A-A und B-B – Revision 4", n => n.Length <= 32));
+        Assert.Equal("Grundriss Erdgeschoss-Revision 7", Rules.Shorten("Grundriss Erdgeschoss – Revision 7 – freigegeben von Bauherr", n => n.Length <= 34));
+        Assert.Equal("Bericht Quartal 2024", Rules.Shorten("Bericht Quartal sehr lang 2024", n => n.Length <= 20));
+        Assert.Equal("", Rules.Shorten("abc defgh", n => n.Length <= 3));
+    }
+}

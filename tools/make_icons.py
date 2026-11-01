@@ -9,32 +9,44 @@ S = 4096  # Arbeitsgröße
 def rounded(d, box, r, fill):
     d.rounded_rectangle(box, radius=r, fill=fill)
 
-def draw(plate=True):
-    """Eigenes Motiv: Pfad aus Knoten (Ordnerbaum), der in ein Prüfhäkchen mündet."""
+def draw(small=False):
+    """Eigenes Motiv: ein Pfad aus Ordnerknoten läuft auf eine Grenzlinie zu; die Prüfplakette zeigt, dass er passt.
+    small=True: vereinfachte Fassung für 16–32 px (weniger Elemente, dickere Linien)."""
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     m = S * 0.06
-    rounded(d, (m, m, S - m, S - m), S * 0.2, (14, 111, 115, 255))
-    w = int(S * 0.055)
-    light = (205, 238, 236, 255)
+    rounded(d, (m, m, S - m, S - m), S * 0.21, (14, 111, 115, 255))
     white = (255, 255, 255, 255)
-    # Baum: senkrechte Linie mit drei Abzweigen
-    x0 = S * 0.27
-    nodes = [(x0, S * 0.26), (x0, S * 0.46), (x0, S * 0.66)]
-    d.line([(x0, S * 0.26), (x0, S * 0.66)], fill=light, width=w)
-    for (x, y) in nodes[1:]:
-        d.line([(x, y), (S * 0.47, y)], fill=light, width=w)
-    for (x, y) in nodes:
-        r = S * 0.058
-        d.ellipse((x - r, y - r, x + r, y + r), fill=white)
-    for y in (S * 0.46, S * 0.66):
-        r = S * 0.045
-        rounded(d, (S * 0.47, y - r, S * 0.62, y + r), r * 0.6, light)
-    # Prüfplakette unten rechts
-    cx, cy, R = S * 0.66, S * 0.66, S * 0.17
-    d.ellipse((cx - R, cy - R, cx + R, cy + R), fill=(255, 196, 92, 255))
-    t = int(S * 0.05)
-    d.line([(cx - R * 0.5, cy + R * 0.02), (cx - R * 0.12, cy + R * 0.4), (cx + R * 0.52, cy - R * 0.38)], fill=(10, 60, 62, 255), width=t, joint="curve")
+    soft = (178, 226, 223, 255)
+    gold = (255, 196, 92, 255)
+    dark = (8, 52, 54, 255)
+    if small:
+        w = int(S * 0.11)
+        y = S * 0.36
+        d.line([(S * 0.2, y), (S * 0.72, y)], fill=white, width=w)
+        for x in (S * 0.24, S * 0.48):
+            r = S * 0.1
+            d.ellipse((x - r, y - r, x + r, y + r), fill=white)
+        d.rectangle((S * 0.77, S * 0.16, S * 0.84, S * 0.52), fill=gold)
+        cx, cy, R = S * 0.55, S * 0.66, S * 0.25
+    else:
+        w = int(S * 0.05)
+        y = S * 0.34
+        # Pfad: Knoten → Knoten → Knoten, endet vor der Grenzlinie (das „Limit“)
+        d.line([(S * 0.2, y), (S * 0.7, y)], fill=soft, width=w)
+        for x in (S * 0.22, S * 0.42, S * 0.62):
+            r = S * 0.062
+            d.ellipse((x - r, y - r, x + r, y + r), fill=white)
+        d.rounded_rectangle((S * 0.76, S * 0.17, S * 0.81, S * 0.51), radius=S * 0.02, fill=gold)
+        cx, cy, R = S * 0.5, S * 0.67, S * 0.19
+    ring = R * 0.12
+    d.ellipse((cx - R - ring, cy - R - ring, cx + R + ring, cy + R + ring), fill=(14, 111, 115, 255))
+    d.ellipse((cx - R, cy - R, cx + R, cy + R), fill=gold)
+    t = int(R * 0.3)
+    pts = [(cx - R * 0.46, cy + R * 0.02), (cx - R * 0.1, cy + R * 0.38), (cx + R * 0.48, cy - R * 0.34)]
+    d.line(pts, fill=dark, width=t, joint="curve")
+    for (x, yy) in (pts[0], pts[2]):
+        d.ellipse((x - t / 2, yy - t / 2, x + t / 2, yy + t / 2), fill=dark)
     return img
 
 def fit(src, w, h, scale=1.0, bg=(0, 0, 0, 0)):
@@ -51,15 +63,20 @@ def main():
     icon.resize((1024, 1024), Image.LANCZOS).save(ROOT / "assets" / "pathrova-icon-1024.png")
     app = ROOT / "src" / "Pathrova.App" / "Assets"; app.mkdir(parents=True, exist_ok=True)
     icon.resize((256, 256), Image.LANCZOS).save(app / "logo.png")
-    icon.resize((256, 256), Image.LANCZOS).save(app / "app.ico", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+    icon.resize((256, 256), Image.LANCZOS).save(app / "app.ico", sizes=[(48, 48), (64, 64), (128, 128), (256, 256)])
+    # ICO mit eigenen kleinen Bildern: Pillow nimmt bei append_images die passende Größe.
+    smalls = [draw(small=True).resize((n, n), Image.LANCZOS) for n in (16, 24, 32)]
+    big = [icon.resize((n, n), Image.LANCZOS) for n in (48, 64, 128, 256)]
+    big[-1].save(app / "app.ico", sizes=[(n, n) for n in (16, 24, 32, 48, 64, 128, 256)], append_images=smalls + big[:-1])
     sizes = {"StoreLogo": (50, 50, 1.0), "Square44x44Logo": (44, 44, 1.0), "Square150x150Logo": (150, 150, 0.66),
              "SmallTile": (71, 71, 0.8), "LargeTile": (310, 310, 0.6), "Wide310x150Logo": (310, 150, 0.8), "SplashScreen": (620, 300, 0.7)}
     for name, (w, h, sc) in sizes.items():
         for pct in (100, 125, 150, 200, 400):
             fit(icon, round(w * pct / 100), round(h * pct / 100), sc).save(out / f"{name}.scale-{pct}.png")
         fit(icon, w, h, sc).save(out / f"{name}.png")
+    small = draw(small=True)
     for ts in (16, 24, 32, 48, 256):
-        img = icon.resize((ts, ts), Image.LANCZOS)
+        img = (small if ts <= 32 else icon).resize((ts, ts), Image.LANCZOS)
         img.save(out / f"Square44x44Logo.targetsize-{ts}.png")
         img.save(out / f"Square44x44Logo.targetsize-{ts}_altform-unplated.png")
         img.save(out / f"Square44x44Logo.targetsize-{ts}_altform-lightunplated.png")

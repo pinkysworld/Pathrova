@@ -29,19 +29,17 @@ public static class Renamer
         foreach (var i in r.Issues)
         {
             if (!Rules.CanFix(i.Kind) || i.RelativePath.Length == 0 || byPath.ContainsKey(i.FullPath)) continue;
-            int? max = null;
+            Func<string, bool>? fits = null;
             if (i.Kind is IssueKind.PathTooLong or IssueKind.LocalPathTooLong or IssueKind.OfficePathLong)
             {
-                // Pfadlänge: nur Dateien kürzen (Ordnernamen tragen oft Bedeutung), um so viel wie nötig.
+                // Pfadlänge: nur Dateien kürzen (Ordnernamen tragen oft Bedeutung), genau so weit wie nötig.
                 if (i.IsDirectory) continue;
-                int limit = i.Kind switch { IssueKind.PathTooLong => r.Options.CloudLimit, IssueKind.LocalPathTooLong => r.Options.LocalLimit, _ => r.Options.OfficeLimit };
-                int over = i.Length - limit;
-                // Bei kodierter Zählung kann ein Zeichen bis zu 9 Stellen kosten – grob über den Namen umrechnen.
-                var name = i.Name;
-                double perChar = i.Kind == IssueKind.PathTooLong ? Math.Max(1.0, (double)Rules.CloudLength(name, r.Options.CountEncoded) / Math.Max(1, name.Length)) : 1.0;
-                max = name.Length - (int)Math.Ceiling(over / perChar);
+                var o = r.Options;
+                var parent = i.RelativePath.Contains('/') ? i.RelativePath[..i.RelativePath.LastIndexOf('/')] + "/" : "";
+                fits = n => Rules.CloudLength(Rules.CloudPath(o, parent + n), o.CountEncoded) <= o.CloudLimit
+                            && Rules.LocalPath(o, parent + n).Length <= (i.Kind == IssueKind.OfficePathLong ? o.OfficeLimit : o.LocalLimit);
             }
-            var newName = Rules.Suggest(i.Name, i.IsDirectory, !i.RelativePath.Contains('/'), r.Options, max);
+            var newName = Rules.Suggest(i.Name, i.IsDirectory, !i.RelativePath.Contains('/'), r.Options, fits);
             if (newName is null) continue;
             byPath[i.FullPath] = new RenameOp { Directory = Path.GetDirectoryName(i.FullPath)!, OldName = i.Name, NewName = newName, IsDirectory = i.IsDirectory, RelativePath = i.RelativePath };
         }

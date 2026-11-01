@@ -51,6 +51,17 @@ public static class Ui
     public static T Res<T>(this Control c, string key) where T : class =>
         c.TryFindResource(key, c.ActualThemeVariant, out var v) && v is T t ? t : throw new KeyNotFoundException(key);
 
+    /// <summary>Stufe als Form und Farbe (nicht nur Farbe): ✕ Fehler, ! Warnung, i Hinweis.</summary>
+    public static Control SeverityBadge(Severity s)
+    {
+        var glyph = new TextBlock { Text = s switch { Severity.Error => "✕", Severity.Warning => "!", _ => "i" }, FontSize = 10, FontWeight = FontWeight.Bold,
+            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        glyph.BindBrush(TextBlock.ForegroundProperty, "OnAccent");
+        var b = new Border { Width = 16, Height = 16, CornerRadius = new CornerRadius(s == Severity.Warning ? 3 : 8), Child = glyph, VerticalAlignment = VerticalAlignment.Center };
+        b.BindBrush(Border.BackgroundProperty, SeverityBrushKey(s));
+        return b;
+    }
+
     public static string SeverityBrushKey(Severity s) => s switch { Severity.Error => "Error", Severity.Warning => "Warn", _ => "Info" };
 
     /// <summary>Dynamische Farbe, die beim Wechsel Hell/Dunkel mitgeht.</summary>
