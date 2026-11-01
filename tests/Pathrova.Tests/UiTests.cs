@@ -109,7 +109,7 @@ public class UiTests
             Save(w, Path.Combine(dir, "2-warnings.png"));
             w.ExpandOptions(); w.Groups.SelectedIndex = 0; Dispatcher.UIThread.RunJobs();
             Save(w, Path.Combine(dir, "3-rules.png"));
-            var rw = new RenameWindow(w.Plan.ToList(), Texts.For(english), w.Result!.Root) { Width = 1100, Height = 650 };
+            var rw = new RenameWindow(w.Plan.ToList(), Texts.For(english), w.Result!.Root) { Width = 1100, Height = 128 + 53.5 * w.Plan.Count };
             rw.Show(); Dispatcher.UIThread.RunJobs();
             Save(rw, Path.Combine(dir, "4-rename-preview.png"));
             if (!dark) Save2x(rw, Path.Combine(dir, "4-rename-preview@2x.png"));

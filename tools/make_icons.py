@@ -14,8 +14,8 @@ def draw(small=False):
     Die Plakette unten rechts zeigt: geprüft. small=True: 16–32 px nur Pfad + Grenze, ohne Plakette."""
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    m = S * 0.06
-    rounded(d, (m, m, S - m, S - m), S * 0.21, (14, 111, 115, 255))
+    m = S * 0.03
+    rounded(d, (m, m, S - m, S - m), S * 0.22, (14, 111, 115, 255))
     white = (255, 255, 255, 255)
     soft = (178, 226, 223, 255)
     gold = (255, 196, 92, 255)
@@ -32,7 +32,7 @@ def draw(small=False):
         d.ellipse((x - r, y - r, x + r, y + r), fill=white)
     d.ellipse((over - r, y - r, over + r, y + r), fill=red)
     bar = S * (0.06 if small else 0.055)
-    d.rounded_rectangle((limit_x - bar / 2, y - S * (0.3 if small else 0.24), limit_x + bar / 2, y + S * (0.3 if small else 0.24)), radius=bar / 2, fill=gold)
+    d.rounded_rectangle((limit_x - bar / 2, y - S * (0.3 if small else 0.23), limit_x + bar / 2, y + S * (0.3 if small else 0.23)), radius=bar / 2, fill=gold)
     return img
     cx, cy, R = S * 0.74, S * 0.76, S * 0.13
     ring = R * 0.14

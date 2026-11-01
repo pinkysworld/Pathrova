@@ -78,6 +78,12 @@ def compose(lang, item, number=None):
         pix = doc[0].get_pixmap(dpi=220, alpha=False)
         page = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGBA")
         page = page.crop((0, 0, page.width, int(page.width * 0.62)))  # obere Hälfte: Kopf + Zusammenfassung
+        # unten weich auslaufen lassen statt hart abschneiden
+        fade = Image.new("RGBA", page.size, (0, 0, 0, 0)); fd = ImageDraw.Draw(fade)
+        n = int(page.height * 0.18)
+        for i in range(n):
+            fd.line([(0, page.height - n + i), (page.width, page.height - n + i)], fill=(255, 255, 255, int(255 * i / (n - 1))))
+        page.alpha_composite(fade)
         place(c, page, 1500, 820, 220)
     elif kind == "zoom":
         src = Image.open(base / theme / f"{name}@2x.png").convert("RGBA")
@@ -94,7 +100,7 @@ def compose(lang, item, number=None):
         nx0, ny0, nx1, ny1 = (int(v * s) for v in NUMBER[lang])
         d.rounded_rectangle((x + nx0 - 14, 250 + ny0 - 4, x + nx1 + 14, 250 + ny1 + 8), 16, outline=GOLD, width=6)
         # Erklärkarte darunter: vorher → nachher
-        y = H - 80 - 230
+        y = 250 + shot.height + 40
         fb, fr, fc = font(FONT_BOLD, 40), font(FONT_REG, 34), font(FONT_BOLD, 30)
         before, after, ok = CARD[lang]
         d.rounded_rectangle((140, y, W - 140, y + 230), 22, fill=(255, 255, 255, 245))
