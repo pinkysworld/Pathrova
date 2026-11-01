@@ -31,3 +31,6 @@ Offen aus dem Review (klein): Diff-Chip „·–·“ bei 13 px schwer lesbar; k
 ## Offen
 - Nach OK: Namen im Partner Center reservieren, Identity übernehmen, neu bauen, Webseite als `pinkysworld/Pathrova` veröffentlichen, einreichen (gestaffelt, nicht vor Mitte November).
 - Nicht geprüft: Bedienung am Windows-Bildschirm, ARM64 auf echter Hardware, echte Windows-Pfade > 260 Zeichen (deckt der Selbsttest ab, sobald er auf Windows läuft).
+
+## Partner Center (01.11.2026)
+Store-ID 9NJN21Z01WPM, Identity `MinhStudios.Pathrova` (passt zum Bundle). Entwurf Submission 1 vollständig bis auf Paket: 12 Titel reserviert, 12 Einträge (store/listings), Preise B 11,99 € / C 8,48 € / D 394 ₹, IARC, Zertifizierungshinweis. Offen: Bundle hochladen und einreichen – bewusst gestaffelt, wartet auf OK des Nutzers.
