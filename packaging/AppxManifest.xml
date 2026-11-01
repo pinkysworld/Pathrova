@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pathrova – MSIX-Manifest. build_msix.ps1 setzt {{IDENTITY_NAME}}, {{PUBLISHER_CN}}, {{PUBLISHER_DISPLAY_NAME}}, {{VERSION}}, {{ARCH}} ein. -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 desktop rescap">
+  <Identity Name="{{IDENTITY_NAME}}" Publisher="{{PUBLISHER_CN}}" Version="{{VERSION}}" ProcessorArchitecture="{{ARCH}}" />
+  <Properties>
+    <DisplayName>Pathrova – Pfadprüfer für Cloud-Migration</DisplayName>
+    <PublisherDisplayName>{{PUBLISHER_DISPLAY_NAME}}</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="de-DE" />
+    <Resource Language="en-US" />
+  </Resources>
+  <Applications>
+    <Application Id="Pathrova" Executable="Pathrova.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="Pathrova" Description="Pfade vor der Cloud-Migration prüfen" BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Pathrova">
+          <uap:ShowNameOnTiles><uap:ShowOn Tile="square150x150Logo" /><uap:ShowOn Tile="wide310x150Logo" /><uap:ShowOn Tile="square310x310Logo" /></uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0E6F73" />
+      </uap:VisualElements>
+      <Extensions>
+        <!-- Aufruf aus Terminal und Skripten: pathrova Ordner (prüft sofort) -->
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="Pathrova.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias><desktop:ExecutionAlias Alias="pathrova.exe" /></uap3:AppExecutionAlias>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <!-- Win32-App im MSIX; liest den gewählten Ordner und benennt nur nach Bestätigung um. Kein Internet. -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
