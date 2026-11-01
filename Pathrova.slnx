@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/Pathrova.Core/Pathrova.Core.csproj" />
+  <Project Path="src/Pathrova.App/Pathrova.App.csproj" />
+  <Project Path="tests/Pathrova.Tests/Pathrova.Tests.csproj" />
+</Solution>

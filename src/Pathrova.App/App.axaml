@@ -1,0 +1,97 @@
+<Application xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="Pathrova.App.App">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="Canvas" Color="#F6F5F2"/>
+          <SolidColorBrush x:Key="Surface" Color="#FFFFFF"/>
+          <SolidColorBrush x:Key="SurfaceAlt" Color="#F0EEE9"/>
+          <SolidColorBrush x:Key="Line" Color="#E2DFD8"/>
+          <SolidColorBrush x:Key="Ink" Color="#1E2230"/>
+          <SolidColorBrush x:Key="Muted" Color="#5E6372"/>
+          <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#5E6372"/>
+          <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#5E6372"/>
+          <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#5E6372"/>
+          <SolidColorBrush x:Key="Accent" Color="#0E6F73"/>
+          <SolidColorBrush x:Key="AccentHover" Color="#0A5A5E"/>
+          <SolidColorBrush x:Key="AccentSoft" Color="#DDF0EF"/>
+          <SolidColorBrush x:Key="RemovedSoft" Color="#FBE3E6"/>
+          <SolidColorBrush x:Key="AddedSoft" Color="#E0F1E4"/>
+          <SolidColorBrush x:Key="ChangedSoft" Color="#FBF0D9"/>
+          <SolidColorBrush x:Key="OnAccent" Color="#FFFFFF"/>
+          <SolidColorBrush x:Key="Info" Color="#1F6FD1"/>
+          <SolidColorBrush x:Key="Warn" Color="#B85A12"/>
+          <SolidColorBrush x:Key="Newer" Color="#7442C8"/>
+          <SolidColorBrush x:Key="Error" Color="#C02848"/>
+          <SolidColorBrush x:Key="Same" Color="#3E7F51"/>
+          <SolidColorBrush x:Key="Danger" Color="#B3261E"/>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="Canvas" Color="#15171E"/>
+          <SolidColorBrush x:Key="Surface" Color="#1E212B"/>
+          <SolidColorBrush x:Key="SurfaceAlt" Color="#262A36"/>
+          <SolidColorBrush x:Key="Line" Color="#323748"/>
+          <SolidColorBrush x:Key="Ink" Color="#ECEDF3"/>
+          <SolidColorBrush x:Key="Muted" Color="#A3A8B8"/>
+          <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#A3A8B8"/>
+          <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#A3A8B8"/>
+          <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#A3A8B8"/>
+          <SolidColorBrush x:Key="Accent" Color="#6FD3CF"/>
+          <SolidColorBrush x:Key="AccentHover" Color="#8FE0DC"/>
+          <SolidColorBrush x:Key="AccentSoft" Color="#1D3B3D"/>
+          <SolidColorBrush x:Key="RemovedSoft" Color="#4A2530"/>
+          <SolidColorBrush x:Key="AddedSoft" Color="#22402C"/>
+          <SolidColorBrush x:Key="ChangedSoft" Color="#463C22"/>
+          <SolidColorBrush x:Key="OnAccent" Color="#062A2B"/>
+          <SolidColorBrush x:Key="Info" Color="#6CB0FF"/>
+          <SolidColorBrush x:Key="Warn" Color="#F3A35F"/>
+          <SolidColorBrush x:Key="Newer" Color="#C3A2FF"/>
+          <SolidColorBrush x:Key="Error" Color="#FF8DA3"/>
+          <SolidColorBrush x:Key="Same" Color="#8AD19C"/>
+          <SolidColorBrush x:Key="Danger" Color="#FFB4AB"/>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+  <Application.Styles>
+    <FluentTheme><FluentTheme.Palettes><ColorPaletteResources x:Key="Light" Accent="#0E6F73"/><ColorPaletteResources x:Key="Dark" Accent="#6FD3CF"/></FluentTheme.Palettes></FluentTheme>
+    <Style Selector="Window"><Setter Property="FontFamily" Value="Segoe UI Variable Text, Segoe UI, avares://Avalonia.Fonts.Inter/Assets#Inter"/><Setter Property="FontSize" Value="14"/><Setter Property="Background" Value="{DynamicResource Canvas}"/><Setter Property="Foreground" Value="{DynamicResource Ink}"/></Style>
+    <Style Selector="Button"><Setter Property="CornerRadius" Value="6"/><Setter Property="MinHeight" Value="34"/><Setter Property="Padding" Value="14,6"/><Setter Property="Background" Value="{DynamicResource Surface}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Foreground" Value="{DynamicResource Ink}"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="Foreground" Value="{DynamicResource Ink}"/></Style>
+    <Style Selector="Button.primary"><Setter Property="Background" Value="{DynamicResource Accent}"/><Setter Property="Foreground" Value="{DynamicResource OnAccent}"/><Setter Property="BorderThickness" Value="0"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Padding" Value="20,6"/></Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource AccentHover}"/><Setter Property="Foreground" Value="{DynamicResource OnAccent}"/></Style>
+    <Style Selector="Button.primary:disabled /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Opacity" Value="0.45"/><Setter Property="Background" Value="{DynamicResource Accent}"/><Setter Property="Foreground" Value="{DynamicResource OnAccent}"/></Style>
+    <Style Selector="Button.danger"><Setter Property="Foreground" Value="{DynamicResource Danger}"/><Setter Property="BorderBrush" Value="{DynamicResource Danger}"/><Setter Property="Background" Value="Transparent"/></Style>
+    <Style Selector="Button.ghost"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="Button.ghost:disabled /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="Transparent"/><Setter Property="Opacity" Value="0.5"/></Style>
+    <Style Selector="Expander.options"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="MinHeight" Value="0"/></Style>
+    <Style Selector="Expander.options /template/ ToggleButton#ExpanderHeader"><Setter Property="MinHeight" Value="30"/><Setter Property="Padding" Value="0,2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <!-- Platzhalter mit ausreichendem Kontrast (Muted erreicht ≥ 4,5:1) -->
+    <Style Selector="TextBox /template/ TextBlock#PART_Placeholder"><Setter Property="Foreground" Value="{DynamicResource Muted}"/><Setter Property="Opacity" Value="1"/></Style>
+    <Style Selector="TextBox /template/ TextBlock#PART_FloatingPlaceholder"><Setter Property="Foreground" Value="{DynamicResource Muted}"/><Setter Property="Opacity" Value="1"/></Style>
+    <!-- Ausgewählte Zeilen: ruhiger Akzent, Text bleibt lesbar (auch dunkel) -->
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource AccentSoft}"/></Style>
+    <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource AccentSoft}"/></Style>
+    <Style Selector="ListBoxItem:selected:focus /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource AccentSoft}"/></Style>
+    <Style Selector="Expander.options /template/ Border"><Setter Property="BorderThickness" Value="0"/><Setter Property="Background" Value="Transparent"/></Style>
+    <!-- Ergebnistabelle: Zeilen über die volle Breite, damit sie mit dem Spaltenkopf fluchten -->
+    <Style Selector="ListBox.results ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Padding" Value="0"/><Setter Property="MinHeight" Value="0"/></Style>
+    <Style Selector="Expander.options /template/ ToggleButton#ExpanderHeader:pointerover /template/ Border"><Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/></Style>
+    <Style Selector="Expander.options /template/ ToggleButton#ExpanderHeader:pointerover /template/ ContentPresenter"><Setter Property="Background" Value="Transparent"/></Style>
+    <Style Selector="Expander.options /template/ ToggleButton#ExpanderHeader:pressed /template/ Border"><Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/></Style>
+    <Style Selector="Border.count"><Setter Property="Background" Value="{DynamicResource AccentSoft}"/></Style>
+    <Style Selector="Border.count > TextBlock"><Setter Property="Foreground" Value="{DynamicResource Accent}"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="ToggleButton.chip"><Setter Property="CornerRadius" Value="13"/><Setter Property="MinHeight" Value="26"/><Setter Property="Padding" Value="9,2"/><Setter Property="FontSize" Value="13"/><Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="{DynamicResource Muted}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/></Style>
+    <Style Selector="ToggleButton.chip:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/><Setter Property="Foreground" Value="{DynamicResource Ink}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/></Style>
+    <Style Selector="ToggleButton.chip:checked /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource AccentSoft}"/><Setter Property="Foreground" Value="{DynamicResource Accent}"/><Setter Property="BorderBrush" Value="{DynamicResource AccentSoft}"/></Style>
+    <Style Selector="ToggleButton.chip:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource AccentSoft}"/><Setter Property="Foreground" Value="{DynamicResource AccentHover}"/><Setter Property="BorderBrush" Value="{DynamicResource Accent}"/></Style>
+    <Style Selector="ToggleButton.chip:pressed /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="{DynamicResource SurfaceAlt}"/></Style>
+    <Style Selector="TextBox"><Setter Property="CornerRadius" Value="6"/><Setter Property="MinHeight" Value="34"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+    <Style Selector="ComboBox"><Setter Property="CornerRadius" Value="6"/><Setter Property="MinHeight" Value="34"/></Style>
+    <Style Selector="ListBoxItem"><Setter Property="Padding" Value="0"/><Setter Property="MinHeight" Value="0"/></Style>
+    <Style Selector="TextBlock.muted"><Setter Property="Foreground" Value="{DynamicResource Muted}"/></Style>
+    <Style Selector="TextBlock.h1"><Setter Property="FontSize" Value="22"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="TextBlock.h2"><Setter Property="FontSize" Value="16"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="Border.card"><Setter Property="Background" Value="{DynamicResource Surface}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="10"/></Style>
+  </Application.Styles>
+</Application>
