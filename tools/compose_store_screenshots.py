@@ -1,33 +1,37 @@
 #!/usr/bin/env python3
 """Store-Bilder 1920 × 1080: Überschrift + App-Aufnahme auf Markenfläche. Eingabe: store/screenshots/<lang>/<theme>/*.png (aus den UI-Tests)."""
-import io, zipfile
+import io, subprocess
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 W, H = 1920, 1080
 TEAL, TEAL_DARK, GOLD = (14, 111, 115), (8, 70, 73), (255, 196, 92)
+EN_NUMBER = 418  # erste Zeile der englischen Demodaten (Aufnahme 1-overview)
 
 SYS = Path("/System/Library/Fonts/Supplemental")
 FONT_BOLD, FONT_REG = (SYS / "Arial Bold.ttf").read_bytes(), (SYS / "Arial.ttf").read_bytes()
 def font(data, size): return ImageFont.truetype(io.BytesIO(data), size)
 
+# (Quelle, Thema, Überschrift, Unterzeile, Art)  Art: None = ganzes Fenster, "zoom" = Nahaufnahme der ersten Zeile, "pdf" = Bericht
 TEXT = {
     "de": [
         ("1-overview", "light", "Alle Pfadprobleme auf einen Blick", "Vor dem Sync nach OneDrive oder SharePoint – in einem Durchgang statt Fehler für Fehler.", None),
         ("4-rename-preview", "light", "Sicher umbenennen – mit Rückgängig", "Vorschau mit Auswahl. Ohne deine Bestätigung ändert sich nichts.", None),
-        ("1-overview", "light", "461 statt 400 Zeichen? Sofort sichtbar.", "Streng gezählt wie in der Cloud – mit Zielbibliothek und URL-Kodierung.", (8, 166, 1000, 640)),
-        ("3-rules", "light", "Regeln passend zu deinem Ziel", "Bibliothekspfad, Sync-Ordner, gesperrte Dateitypen, # und %.", None),
-        ("2-errors", "dark", "Bericht für Kunden als CSV und PDF", "Für IT-Dienstleister und kleine Firmen. Offline, ohne Konto.", None),
+        ("1-overview", "light", "461 statt 400 Zeichen? Sofort sichtbar.", "Streng gezählt wie in der Cloud – und gleich ein Vorschlag, der passt.", "zoom"),
+        ("report", "light", "Bericht für Kunden als PDF und CSV", "Zusammenfassung je Problemart, jede Fundstelle mit Pfad. Offline, ohne Konto.", "pdf"),
+        ("2-warnings", "dark", "Fehler, Warnungen, Hinweise – klar getrennt", "Hell oder dunkel. Filtern, suchen, im Explorer zeigen.", None),
     ],
     "en": [
         ("1-overview", "light", "Every path issue at a glance", "Before you sync to OneDrive or SharePoint – one pass instead of error by error.", None),
         ("4-rename-preview", "light", "Rename safely – with undo", "Preview with selection. Nothing changes until you confirm.", None),
-        ("1-overview", "light", "461 instead of 400 characters? Spotted.", "Counted strictly like the cloud – with target library and URL encoding.", (8, 166, 1000, 640)),
-        ("3-rules", "light", "Rules that match your target", "Library path, sync folder, blocked file types, # and %.", None),
-        ("2-errors", "dark", "Client-ready CSV and PDF reports", "For IT service providers and small businesses. Offline, no account.", None),
+        ("1-overview", "light", "{n} instead of 400 characters? Spotted.", "Counted strictly like the cloud – with a suggestion that fits.", "zoom"),
+        ("report", "light", "Client-ready PDF and CSV reports", "Summary per issue type, every finding with its path. Offline, no account.", "pdf"),
+        ("2-warnings", "dark", "Errors, warnings, notes – clearly apart", "Light or dark. Filter, search, reveal in Explorer.", None),
     ],
 }
+ZOOM = (365, 308, 1000, 480)   # erste zwei Zeilen der Liste in 1-overview (1366 × 820)
+NUMBER = {"de": (589 - 365, 333 - 308, 642 - 365, 362 - 308), "en": (570 - 365, 333 - 308, 619 - 365, 362 - 308)}  # Zahl innerhalb von ZOOM
 
 def background():
     bg = Image.new("RGB", (W, H), TEAL)
@@ -54,30 +58,59 @@ def place(canvas, shot, box_w, box_h, top):
     canvas.alpha_composite(shot, (x, top))
     return x, shot
 
-def compose(lang, item):
-    name, theme, head, sub, crop = item
-    src = Image.open(ROOT / "store" / "screenshots" / lang / theme / f"{name}.png").convert("RGBA")
+def compose(lang, item, number=None):
+    name, theme, head, sub, kind = item
+    head = head.replace("{n}", str(number or ""))
     c = background()
     d = ImageDraw.Draw(c)
     fh, fs = font(FONT_BOLD, 66), font(FONT_REG, 30)
     d.text((W // 2, 92), head, font=fh, fill="white", anchor="mm")
     d.text((W // 2, 162), sub, font=fs, fill=(205, 238, 236), anchor="mm")
-    if crop:
-        part = src.crop(crop)
-        x, shot = place(c, part, 1640, 820, 230)
-        # Zahl markieren
+    base = ROOT / "store" / "screenshots" / lang
+    if kind == "pdf":
+        png = base / "report-page1.png"
+        subprocess.run(["sips", "-s", "format", "png", "--resampleWidth", "1400", str(base / "report.pdf"), "--out", str(png)], check=True, capture_output=True)
+        page = Image.open(png).convert("RGBA")
+        white = Image.new("RGBA", page.size, "white"); white.alpha_composite(page); page = white
+        page = page.crop((0, 0, page.width, int(page.width * 0.62)))  # obere Hälfte: Kopf + Zusammenfassung
+        place(c, page, 1500, 820, 220)
+        png.unlink()
+    elif kind == "zoom":
+        src = Image.open(base / theme / f"{name}.png").convert("RGBA")
+        part = src.crop(ZOOM)
+        # rechten Rand weich ausblenden (abgeschnittener Text)
+        bg = src.getpixel((ZOOM[2] - 2, ZOOM[1] + 2))
+        fade = Image.new("RGBA", part.size, (0, 0, 0, 0)); fd = ImageDraw.Draw(fade)
+        for i in range(90):
+            fd.line([(part.width - 90 + i, 0), (part.width - 90 + i, part.height)], fill=bg[:3] + (int(255 * i / 89),))
+        part.alpha_composite(fade)
+        s = 1640 / part.width
+        x, shot = place(c, part, 1640, 600, 250)
         d = ImageDraw.Draw(c)
-        d.rounded_rectangle((x - 6, 224, x + shot.width + 6, 236 + shot.height), 18, outline=GOLD, width=5)
+        nx0, ny0, nx1, ny1 = (int(v * s) for v in NUMBER[lang])
+        d.rounded_rectangle((x + nx0 - 14, 250 + ny0 - 4, x + nx1 + 14, 250 + ny1 + 8), 16, outline=GOLD, width=6)
+        # Erklärkarte darunter
+        y = 250 + shot.height + 70
+        fb, fr = font(FONT_BOLD, 54), font(FONT_REG, 34)
+        d.rounded_rectangle((140, y, W - 140, y + 230), 22, fill=(255, 255, 255, 240))
+        d.text((200, y + 56), ("Pfad in der Cloud zu lang" if lang == "de" else "Cloud path too long"), font=fb, fill=(180, 35, 24), anchor="lm")
+        d.text((200, y + 150), ("Pathrova schlägt einen kürzeren Namen vor – Revision und Endung bleiben erhalten."
+                                if lang == "de" else "Pathrova suggests a shorter name – revision and extension are kept."), font=fr, fill=(30, 34, 48), anchor="lm")
     else:
-        place(c, src, 1640, 850, 220)
+        src = Image.open(base / theme / f"{name}.png").convert("RGBA")
+        place(c, src, 1640, 820, 220)
     return c.convert("RGB")
+
+def zoom_number(lang):
+    """Liest die Länge der ersten Zeile aus der CSV-freien Quelle: hier fest aus den Demodaten (DE 461, EN siehe Aufnahme)."""
+    return {"de": 461, "en": EN_NUMBER}[lang]
 
 def main():
     for lang, items in TEXT.items():
         out = ROOT / "store" / "screenshots" / lang / "marketing"; out.mkdir(parents=True, exist_ok=True)
         for f in out.glob("*.png"): f.unlink()
         for n, item in enumerate(items, 1):
-            compose(lang, item).save(out / f"{n}-{item[0]}.png", optimize=True)
+            compose(lang, item, zoom_number(lang)).save(out / f"{n}-{item[0]}.png", optimize=True)
     print("ok")
 
 if __name__ == "__main__":

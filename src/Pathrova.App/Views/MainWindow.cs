@@ -95,13 +95,13 @@ public sealed class MainWindow : Window
         Put(Ui.Text(T.TargetPrefix), 0, 0); Put(_prefix, 0, 1);
         Put(Ui.Text(T.LocalRoot), 1, 0); Put(_localRoot, 1, 1);
         Put(Ui.Text(T.Blocked), 2, 0); Put(_blocked, 2, 1);
-        var checks = new WrapPanel { ItemSpacing = 18, Children = { _encoded, _hash, _office } };
+        var checks = Ui.Column(2, _encoded, _hash, _office);
         Put(checks, 3, 1);
         _options = new Expander { Header = OptionsHeader(), Content = optGrid, IsExpanded = false, HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 6, 0, 0) };
         _options.Classes.Add("options");
         AutomationProperties.SetAutomationId(_options, "Options");
 
-        _kpis = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 28, IsVisible = false };
+        _kpis = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, IsVisible = false, Margin = new Thickness(0, 0, 0, 4) };
         _status = new TextBlock { Text = "", TextWrapping = TextWrapping.Wrap };
         _status.Classes.Add("muted");
         _progress = new ProgressBar { IsIndeterminate = true, IsVisible = false, Height = 4, MinHeight = 4 };
@@ -183,6 +183,7 @@ public sealed class MainWindow : Window
         v.BindBrush(TextBlock.ForegroundProperty, brush);
         var l = Ui.Text(label, "muted", 13);
         var c = Ui.Column(0, v, l);
+        c.MinWidth = 120;
         AutomationProperties.SetName(c, $"{value} {label}");
         return c;
     }
@@ -303,7 +304,10 @@ public sealed class MainWindow : Window
         _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Error), _settings.English), T.Errors, "Error"));
         _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Warning), _settings.English), T.Warnings, "Warn"));
         _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Info), _settings.English), T.Infos, "Info"));
-        _kpis.Children.Add(Kpi(Format.Number(_plan.Count, _settings.English), T.Fixable, "Accent"));
+        var fix = new Border { Classes = { "count" }, CornerRadius = new CornerRadius(14), Padding = new Thickness(14, 6), VerticalAlignment = VerticalAlignment.Center,
+            Child = Ui.Text($"✓  {Format.Number(_plan.Count, _settings.English)} {T.Fixable}", size: 14) };
+        AutomationProperties.SetName(fix, $"{_plan.Count} {T.Fixable}");
+        _kpis.Children.Add(fix);
         _kpis.IsVisible = true;
         _body.IsVisible = true; _empty.IsVisible = false;
         Refresh();

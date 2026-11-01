@@ -100,19 +100,21 @@ public class UiTests
             var dir = Directory.CreateDirectory(Path.Combine(outDir, english ? "en" : "de", dark ? "dark" : "light")).FullName;
             var root = d.Root;
             Ui.DisplayPath = p => p.StartsWith(root) ? @"\\fileserver\daten" + p[root.Length..].Replace('/', '\\') : p;
+            Reports.DisplayPath = Ui.DisplayPath;
             var w = await Scanned(d, english);
             w.ShowFolderText();
             Save(w, Path.Combine(dir, "1-overview.png"));
-            var g = w.Groups.ItemsSource!.Cast<object>().First(x => x.ToString()!.Contains(english ? "Label = Errors" : "Label = Fehler"));
+            if (!dark) w.ExportTo(Path.Combine(dir, "..", "report.pdf"));
+            var g = w.Groups.ItemsSource!.Cast<object>().First(x => x.ToString()!.Contains(english ? "Label = Warnings" : "Label = Warnungen"));
             w.Groups.SelectedItem = g; Dispatcher.UIThread.RunJobs();
-            Save(w, Path.Combine(dir, "2-errors.png"));
+            Save(w, Path.Combine(dir, "2-warnings.png"));
             w.ExpandOptions(); w.Groups.SelectedIndex = 0; Dispatcher.UIThread.RunJobs();
             Save(w, Path.Combine(dir, "3-rules.png"));
-            var rw = new RenameWindow(w.Plan.ToList(), Texts.For(english), w.Result!.Root) { Width = 1100, Height = 700 };
+            var rw = new RenameWindow(w.Plan.ToList(), Texts.For(english), w.Result!.Root) { Width = 1100, Height = 610 };
             rw.Show(); Dispatcher.UIThread.RunJobs();
             Save(rw, Path.Combine(dir, "4-rename-preview.png"));
             rw.Close(); w.Close();
-            Ui.DisplayPath = p => p;
+            Ui.DisplayPath = p => p; Reports.DisplayPath = p => p;
         }
         Avalonia.Application.Current!.RequestedThemeVariant = ThemeVariant.Default;
         Assert.True(File.Exists(Path.Combine(outDir, "de", "light", "4-rename-preview.png")));

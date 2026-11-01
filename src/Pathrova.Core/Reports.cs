@@ -7,6 +7,9 @@ public static class Reports
 {
     public const int PdfMaxRows = 5000;
 
+    /// <summary>Anzeige von Pfaden im PDF (für Beispielberichte und Screenshots).</summary>
+    public static Func<string, string> DisplayPath { get; set; } = p => p;
+
     public static string Csv(ScanResult r, IEnumerable<Issue> issues, bool english, IReadOnlyDictionary<string, string>? proposals = null)
     {
         var t = Texts.For(english);
@@ -34,6 +37,8 @@ public static class Reports
     private abstract record Line(float Height);
     private sealed record TextLine(string Text, float Size, SKColor Color, bool Bold, float Indent = 0, float Height = 0) : Line(Height);
     private sealed record Gap(float H) : Line(H);
+    private sealed record Band(string Title, string Sub) : Line(96);
+    private sealed record SummaryRow(string Label, string Count, SKColor Color) : Line(22);
 
     /// <summary>A4-Bericht: Kopf, Zusammenfassung je Problemart, dann die Einträge gruppiert (höchstens PdfMaxRows).</summary>
     public static void WritePdf(string path, ScanResult r, IEnumerable<Issue> issues, bool english)
@@ -52,8 +57,8 @@ public static class Reports
             using var font = new SKFont(b ? bold : regular, size);
             foreach (var part in Wrap(text, font, W - 2 * M - indent)) lines.Add(new TextLine(part, size, c, b, indent, size * 1.45f));
         }
-        Add(t.ReportTitle, 20, ink, true);
-        Add($"{t.Folder}: {r.Root}", 10, muted);
+        lines.Add(new Band(t.ReportTitle, "Pathrova"));
+        Add($"{t.Folder}: {DisplayPath(r.Root)}", 10, muted);
         Add($"{t.Target}: {Rules.CloudPath(r.Options, "")} · {t.LocalRoot}: {r.Options.LocalRoot} · {t.Counting(r.Options.CountEncoded)}", 10, muted);
         Add($"{t.Created}: {r.CreatedAt:yyyy-MM-dd HH:mm} · {t.Done(r)}", 10, muted);
         lines.Add(new Gap(10));
@@ -61,7 +66,7 @@ public static class Reports
         var all = issues.ToList();
         if (all.Count == 0) Add(t.NoIssues, 11, ink);
         foreach (var g in all.GroupBy(i => i.Kind).OrderBy(g => g.Key))
-            Add($"{t.Severity(Rules.SeverityOf(g.Key))} · {t.Kind(g.Key)}: {Format.Number(g.Sum(i => 1L + i.Inside), english)}", 11, Col(Rules.SeverityOf(g.Key)), false, 8);
+            lines.Add(new SummaryRow($"{t.Severity(Rules.SeverityOf(g.Key))} · {t.Kind(g.Key)}", Format.Number(g.Sum(i => 1L + i.Inside), english), Col(Rules.SeverityOf(g.Key))));
         lines.Add(new Gap(12));
         int shown = 0;
         foreach (var g in all.GroupBy(i => i.Kind).OrderBy(g => g.Key))
@@ -74,7 +79,7 @@ public static class Reports
             {
                 if (shown++ >= PdfMaxRows) break;
                 var extra = string.Join(" · ", new[] { i.Detail, i.Inside > 0 ? t.AndInside(i.Inside) : "" }.Where(s => s.Length > 0));
-                Add(i.FullPath + (extra.Length > 0 ? "   [" + extra + "]" : ""), 9, ink, false, 8);
+                Add(DisplayPath(i.FullPath) + (extra.Length > 0 ? "   [" + extra + "]" : ""), 9, ink, false, 8);
             }
         }
         if (all.Count > PdfMaxRows) { lines.Add(new Gap(8)); Add(t.Truncated(PdfMaxRows, all.Count), 10, muted); }
@@ -83,7 +88,7 @@ public static class Reports
 
         // Seiten aufteilen, dann zeichnen (für „Seite x von y“).
         var pages = new List<List<Line>> { new() };
-        float y = M;
+        float y = 0;
         foreach (var l in lines)
         {
             if (y + l.Height > Bottom && pages[^1].Count > 0) { pages.Add([]); y = M; if (l is Gap) continue; }
@@ -94,10 +99,32 @@ public static class Reports
         for (int p = 0; p < pages.Count; p++)
         {
             var canvas = doc.BeginPage(W, H);
-            y = M;
+            canvas.Clear(SKColors.White);
+            y = pages[p].FirstOrDefault() is Band ? 0 : M;
             foreach (var l in pages[p])
             {
-                if (l is TextLine tl)
+                if (l is Band b)
+                {
+                    using var bg = new SKPaint { Color = new SKColor(0x0E, 0x6F, 0x73), IsAntialias = true };
+                    canvas.DrawRect(0, 0, W, 80, bg);
+                    using var tf = new SKFont(bold, 22); using var sf = new SKFont(regular, 10);
+                    using var white = new SKPaint { Color = SKColors.White, IsAntialias = true };
+                    using var soft = new SKPaint { Color = new SKColor(0xCD, 0xEE, 0xEC), IsAntialias = true };
+                    canvas.DrawText(b.Sub, M, 30, sf, soft);
+                    canvas.DrawText(b.Title, M, 58, tf, white);
+                }
+                else if (l is SummaryRow sr)
+                {
+                    using var dot = new SKPaint { Color = sr.Color, IsAntialias = true };
+                    using var line = new SKPaint { Color = new SKColor(0xE2, 0xDF, 0xD8), StrokeWidth = 0.6f };
+                    using var f = new SKFont(regular, 10.5f); using var fb = new SKFont(bold, 10.5f);
+                    using var inkP = new SKPaint { Color = ink, IsAntialias = true };
+                    canvas.DrawCircle(M + 5, y + 10, 3.5f, dot);
+                    canvas.DrawText(sr.Label, M + 16, y + 14, f, inkP);
+                    canvas.DrawText(sr.Count, W - M - fb.MeasureText(sr.Count), y + 14, fb, inkP);
+                    canvas.DrawLine(M, y + 20, W - M, y + 20, line);
+                }
+                else if (l is TextLine tl)
                 {
                     using var font = new SKFont(tl.Bold ? bold : regular, tl.Size);
                     using var paint = new SKPaint { Color = tl.Color, IsAntialias = true };

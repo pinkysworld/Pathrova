@@ -40,8 +40,8 @@ public sealed class Texts
     public string CountEncoded => T("Streng zählen: Sonderzeichen und Leerzeichen URL-kodiert (%20)", "Strict: count special characters and spaces URL-encoded (%20)");
     public string WarnHash => T("# und % melden (in manchen Organisationen gesperrt)", "Report # and % (blocked in some organizations)");
     public string WarnOffice => T("; und & melden (Probleme beim Speichern aus Office)", "Report ; and & (issues saving from Office)");
-    public string Blocked => T("Gesperrte Dateitypen (von der IT vorgegeben)", "Blocked file types (set by your IT)");
-    public string BlockedHint => T("z. B. exe; bat; mdb", "e.g. exe; bat; mdb");
+    public string Blocked => T("Gesperrte Dateitypen", "Blocked file types");
+    public string BlockedHint => T("von deiner IT vorgegeben, z. B. exe; bat; mdb", "set by your IT, e.g. exe; bat; mdb");
     public string Scanning(long files, long folders) => T($"Prüfe … {Format.Number(files, false)} Dateien, {Format.Number(folders, false)} Ordner", $"Checking … {Format.Number(files, true)} files, {Format.Number(folders, true)} folders");
     public string Done(ScanResult r) => T(
         $"{Format.Number(r.Files, false)} Dateien und {Format.Number(r.Folders, false)} Ordner in {r.Duration.TotalSeconds:0.0} s geprüft{(r.Cancelled ? " (abgebrochen, unvollständig)" : "")}.",

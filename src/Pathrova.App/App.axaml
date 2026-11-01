@@ -23,6 +23,7 @@
           <SolidColorBrush x:Key="Warn" Color="#B85A12"/>
           <SolidColorBrush x:Key="Newer" Color="#7442C8"/>
           <SolidColorBrush x:Key="Error" Color="#B42318"/>
+          <SolidColorBrush x:Key="ErrorSoft" Color="#FDE4E1"/>
           <SolidColorBrush x:Key="Same" Color="#3E7F51"/>
           <SolidColorBrush x:Key="Danger" Color="#B3261E"/>
         </ResourceDictionary>
@@ -46,7 +47,8 @@
           <SolidColorBrush x:Key="Info" Color="#6CB0FF"/>
           <SolidColorBrush x:Key="Warn" Color="#F3A35F"/>
           <SolidColorBrush x:Key="Newer" Color="#C3A2FF"/>
-          <SolidColorBrush x:Key="Error" Color="#FF8DA3"/>
+          <SolidColorBrush x:Key="Error" Color="#F87171"/>
+          <SolidColorBrush x:Key="ErrorSoft" Color="#4A2226"/>
           <SolidColorBrush x:Key="Same" Color="#8AD19C"/>
           <SolidColorBrush x:Key="Danger" Color="#FFB4AB"/>
         </ResourceDictionary>

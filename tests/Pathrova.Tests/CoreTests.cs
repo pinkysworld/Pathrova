@@ -240,3 +240,17 @@ public class ShortenTests
         Assert.Equal("", Rules.Shorten("abc defgh", n => n.Length <= 3));
     }
 }
+
+public class DiffTests
+{
+    [Fact]
+    public void MarksOnlyChangedCharacters()
+    {
+        var old = Pathrova.App.Views.RenameWindow.Segments("Grundriss – Revision 7 – frei.pdf", "Grundriss-Revision 7-frei.pdf");
+        Assert.Equal("Grundriss – Revision 7 – frei.pdf", string.Concat(old.Select(s => s.Text)));
+        Assert.Equal(" – ", string.Concat(old.Where(s => s.Changed).Select(s => s.Text))[..3]);
+        Assert.Equal(6, old.Where(s => s.Changed).Sum(s => s.Text.Length));
+        var neu = Pathrova.App.Views.RenameWindow.Segments("Grundriss-Revision 7-frei.pdf", "Grundriss – Revision 7 – frei.pdf");
+        Assert.Equal("--", string.Concat(neu.Where(s => s.Changed).Select(s => s.Text)));
+    }
+}

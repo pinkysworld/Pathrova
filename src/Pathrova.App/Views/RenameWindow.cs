@@ -79,26 +79,40 @@ public sealed class RenameWindow : Window
         return line;
     }
 
-    /// <summary>Hebt nur den geänderten Mittelteil hervor (gemeinsamer Anfang und Ende bleiben normal).</summary>
+    /// <summary>Zeichengenauer Vergleich (längste gemeinsame Teilfolge): markiert nur entfernte bzw. neue Zeichen.</summary>
+    public static List<(string Text, bool Changed)> Segments(string text, string other)
+    {
+        int n = text.Length, m = other.Length;
+        var l = new int[n + 1, m + 1];
+        for (int i = n - 1; i >= 0; i--)
+            for (int j = m - 1; j >= 0; j--)
+                l[i, j] = text[i] == other[j] ? l[i + 1, j + 1] + 1 : Math.Max(l[i + 1, j], l[i, j + 1]);
+        var segs = new List<(string, bool)>();
+        var sb = new System.Text.StringBuilder(); bool? cur = null;
+        void Push(char c, bool changed) { if (cur != changed && sb.Length > 0) { segs.Add((sb.ToString(), cur!.Value)); sb.Clear(); } cur = changed; sb.Append(c); }
+        int x = 0, y = 0;
+        while (x < n)
+        {
+            if (y < m && text[x] == other[y]) { Push(text[x], false); x++; y++; }
+            else if (y < m && l[x, y + 1] >= l[x + 1, y]) y++;
+            else { Push(text[x], true); x++; }
+        }
+        if (sb.Length > 0) segs.Add((sb.ToString(), cur!.Value));
+        return segs;
+    }
+
     public static TextBlock Diff(string text, string other, bool isNew)
     {
-        int pre = 0;
-        while (pre < text.Length && pre < other.Length && text[pre] == other[pre]) pre++;
-        int suf = 0;
-        while (suf < text.Length - pre && suf < other.Length - pre && text[^(suf + 1)] == other[^(suf + 1)]) suf++;
         var tb = new TextBlock { TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
-        tb.Inlines!.Add(new Run(text[..pre]));
-        var mid = text[pre..(text.Length - suf)];
-        // Entfernte Leerzeichen sichtbar machen.
-        var shown = isNew ? mid : mid.Replace(' ', '␣');
-        if (shown.Length > 0)
+        foreach (var (part, changed) in Segments(text, other))
         {
-            var run = new Run(shown) { FontWeight = FontWeight.Bold, TextDecorations = isNew ? null : TextDecorations.Strikethrough };
+            if (!changed) { tb.Inlines!.Add(new Run(part)); continue; }
+            // Entfernte Leerzeichen als „·“ sichtbar machen.
+            var run = new Run(isNew ? part : part.Replace(' ', '·')) { FontWeight = FontWeight.Bold };
             run.BindBrush(TextElement.ForegroundProperty, isNew ? "Accent" : "Error");
-            tb.Inlines.Add(run);
+            run.BindBrush(TextElement.BackgroundProperty, isNew ? "AccentSoft" : "ErrorSoft");
+            tb.Inlines!.Add(run);
         }
-        else if (!isNew) { }
-        tb.Inlines.Add(new Run(text[(text.Length - suf)..]));
         ToolTip.SetTip(tb, text);
         return tb;
     }

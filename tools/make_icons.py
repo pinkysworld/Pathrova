@@ -10,8 +10,8 @@ def rounded(d, box, r, fill):
     d.rounded_rectangle(box, radius=r, fill=fill)
 
 def draw(small=False):
-    """Eigenes Motiv: ein Pfad aus Ordnerknoten läuft auf eine Grenzlinie zu; die Prüfplakette zeigt, dass er passt.
-    small=True: vereinfachte Fassung für 16–32 px (weniger Elemente, dickere Linien)."""
+    """Eigenes Motiv: Ein Pfad aus Ordnerknoten stößt an eine Grenze (gelb); der letzte Knoten ragt darüber und ist rot.
+    Die Plakette unten rechts zeigt: geprüft. small=True: 16–32 px nur Pfad + Grenze, ohne Plakette."""
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     m = S * 0.06
@@ -19,27 +19,24 @@ def draw(small=False):
     white = (255, 255, 255, 255)
     soft = (178, 226, 223, 255)
     gold = (255, 196, 92, 255)
+    red = (240, 98, 80, 255)
     dark = (8, 52, 54, 255)
+    limit_x = S * (0.70 if small else 0.66)
+    y = S * (0.5 if small else 0.42)
+    w = int(S * (0.10 if small else 0.05))
+    r = S * (0.105 if small else 0.068)
+    xs = [S * 0.22, S * 0.45] if small else [S * 0.2, S * 0.36, S * 0.52]
+    over = S * (0.82 if small else 0.78)
+    d.line([(xs[0], y), (over, y)], fill=white if small else soft, width=w)
+    for x in xs:
+        d.ellipse((x - r, y - r, x + r, y + r), fill=white)
+    d.ellipse((over - r, y - r, over + r, y + r), fill=red)
+    bar = S * (0.06 if small else 0.045)
+    d.rounded_rectangle((limit_x - bar / 2, y - S * (0.3 if small else 0.2), limit_x + bar / 2, y + S * (0.3 if small else 0.17)), radius=bar / 2, fill=gold)
     if small:
-        w = int(S * 0.11)
-        y = S * 0.36
-        d.line([(S * 0.2, y), (S * 0.72, y)], fill=white, width=w)
-        for x in (S * 0.24, S * 0.48):
-            r = S * 0.1
-            d.ellipse((x - r, y - r, x + r, y + r), fill=white)
-        d.rectangle((S * 0.77, S * 0.16, S * 0.84, S * 0.52), fill=gold)
-        cx, cy, R = S * 0.55, S * 0.66, S * 0.25
-    else:
-        w = int(S * 0.05)
-        y = S * 0.34
-        # Pfad: Knoten → Knoten → Knoten, endet vor der Grenzlinie (das „Limit“)
-        d.line([(S * 0.2, y), (S * 0.7, y)], fill=soft, width=w)
-        for x in (S * 0.22, S * 0.42, S * 0.62):
-            r = S * 0.062
-            d.ellipse((x - r, y - r, x + r, y + r), fill=white)
-        d.rounded_rectangle((S * 0.76, S * 0.17, S * 0.81, S * 0.51), radius=S * 0.02, fill=gold)
-        cx, cy, R = S * 0.5, S * 0.67, S * 0.19
-    ring = R * 0.12
+        return img
+    cx, cy, R = S * 0.74, S * 0.76, S * 0.13
+    ring = R * 0.14
     d.ellipse((cx - R - ring, cy - R - ring, cx + R + ring, cy + R + ring), fill=(14, 111, 115, 255))
     d.ellipse((cx - R, cy - R, cx + R, cy + R), fill=gold)
     t = int(R * 0.3)
