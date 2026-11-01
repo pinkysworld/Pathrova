@@ -57,7 +57,7 @@ public sealed class MainWindow : Window
     /// <summary>Für Screenshots: Ordnerfeld mit Anzeigepfad statt Testpfad.</summary>
     public void ShowFolderText() => _folder.Text = Ui.DisplayPath(_folder.Text ?? "");
 
-    public void ExpandOptions() => _options.IsExpanded = true;
+    public void ExpandOptions(bool open = true) => _options.IsExpanded = open;
 
     private void Build()
     {
@@ -292,20 +292,22 @@ public sealed class MainWindow : Window
     private void ShowResult()
     {
         if (_result is not { } r) return;
-        var groups = new List<GroupItem> { new(T.All, null, null, r.Issues.Sum(i => 1L + i.Inside)) };
+        var groups = new List<GroupItem> { new(T.All, null, null, r.Issues.Count) };
         foreach (var s in Enum.GetValues<Severity>())
-            if (r.Issues.Any(i => i.Severity == s)) groups.Add(new(s switch { Severity.Error => T.Errors, Severity.Warning => T.Warnings, _ => T.Infos }, null, s, r.Issues.Where(i => i.Severity == s).Sum(i => 1L + i.Inside)));
-        foreach (var g in r.Groups) groups.Add(new(T.Kind(g.Key), g.Key, Rules.SeverityOf(g.Key), r.Affected(g.Key)));
+            if (r.Issues.Any(i => i.Severity == s)) groups.Add(new(s switch { Severity.Error => T.Errors, Severity.Warning => T.Warnings, _ => T.Infos }, null, s, r.Issues.Count(i => i.Severity == s)));
+        foreach (var g in r.Groups) groups.Add(new(T.Kind(g.Key), g.Key, Rules.SeverityOf(g.Key), g.Count()));
         _groups.ItemsSource = groups;
         _groups.SelectedItem = groups.FirstOrDefault(g => g.Kind == _kindFilter && g.Severity == (_kindFilter is null ? _severityFilter : g.Severity)) ?? groups[0];
         _status.Text = T.Done(r) + " " + (r.Issues.Count == 0 ? T.NoIssues : "");
-        long Sum(Severity s) => r.Issues.Where(i => i.Severity == s).Sum(i => 1L + i.Inside);
+        long Sum(Severity s) => r.Issues.Count(i => i.Severity == s);
         _kpis.Children.Clear();
         _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Error), _settings.English), T.Errors, "Error"));
         _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Warning), _settings.English), T.Warnings, "Warn"));
         _kpis.Children.Add(Kpi(Format.Number(Sum(Severity.Info), _settings.English), T.Infos, "Info"));
-        var fix = new Border { Classes = { "count" }, CornerRadius = new CornerRadius(14), Padding = new Thickness(14, 6), VerticalAlignment = VerticalAlignment.Center,
-            Child = Ui.Text($"✓  {Format.Number(_plan.Count, _settings.English)} {T.Fixable}", size: 14) };
+        var check = Ui.Text("✓", size: 14); check.FontWeight = FontWeight.Bold; check.BindBrush(TextBlock.ForegroundProperty, "Same");
+        var fix = new Border { CornerRadius = new CornerRadius(14), Padding = new Thickness(14, 6), VerticalAlignment = VerticalAlignment.Center, BorderThickness = new Thickness(1),
+            Child = Ui.Row(8, check, Ui.Text($"{Format.Number(_plan.Count, _settings.English)} {T.Fixable}", size: 14)) };
+        fix.BindBrush(Border.BackgroundProperty, "SurfaceAlt"); fix.BindBrush(Border.BorderBrushProperty, "Line");
         AutomationProperties.SetName(fix, $"{_plan.Count} {T.Fixable}");
         _kpis.Children.Add(fix);
         _kpis.IsVisible = true;

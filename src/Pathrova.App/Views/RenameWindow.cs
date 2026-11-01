@@ -108,7 +108,7 @@ public sealed class RenameWindow : Window
         {
             if (!changed) { tb.Inlines!.Add(new Run(part)); continue; }
             // Entfernte Leerzeichen als „·“ sichtbar machen.
-            var run = new Run(isNew ? part : part.Replace(' ', '·')) { FontWeight = FontWeight.Bold };
+            var run = new Run("\u2009" + (isNew ? part : part.Replace(' ', '·')) + "\u2009") { FontWeight = FontWeight.Bold };
             run.BindBrush(TextElement.ForegroundProperty, isNew ? "Accent" : "Error");
             run.BindBrush(TextElement.BackgroundProperty, isNew ? "AccentSoft" : "ErrorSoft");
             tb.Inlines!.Add(run);

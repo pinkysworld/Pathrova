@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Store-Bilder 1920 × 1080: Überschrift + App-Aufnahme auf Markenfläche. Eingabe: store/screenshots/<lang>/<theme>/*.png (aus den UI-Tests)."""
-import io, subprocess
+import io
+import fitz  # PyMuPDF: Bericht scharf rendern
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -30,8 +31,13 @@ TEXT = {
         ("2-warnings", "dark", "Errors, warnings, notes – clearly apart", "Light or dark. Filter, search, reveal in Explorer.", None),
     ],
 }
-ZOOM = (365, 308, 1000, 480)   # erste zwei Zeilen der Liste in 1-overview (1366 × 820)
-NUMBER = {"de": (589 - 365, 333 - 308, 642 - 365, 362 - 308), "en": (570 - 365, 333 - 308, 619 - 365, 362 - 308)}  # Zahl innerhalb von ZOOM
+ZOOM = (365, 308, 1000, 474)   # erste zwei Zeilen der Liste in 1-overview (1366 × 820)
+NUMBER = {"de": (556 - 365, 330 - 308, 606 - 365, 349 - 308), "en": (559 - 365, 330 - 308, 609 - 365, 349 - 308)}  # Zahl innerhalb von ZOOM
+
+CARD = {
+    "de": ("Grundriss Erdgeschoss – Revision 7 – freigegeben von Bauherr und Behörde.pdf", "→ Grundriss Erdgeschoss-Revision 7-freigegeben.pdf   (passt)"),
+    "en": ("Ground floor plan – revision 7 – approved by client and authority.pdf", "→ Ground floor plan-revision 7-approved by client and authority.pdf   (fits)"),
+}
 
 def background():
     bg = Image.new("RGB", (W, H), TEAL)
@@ -68,34 +74,32 @@ def compose(lang, item, number=None):
     d.text((W // 2, 162), sub, font=fs, fill=(205, 238, 236), anchor="mm")
     base = ROOT / "store" / "screenshots" / lang
     if kind == "pdf":
-        png = base / "report-page1.png"
-        subprocess.run(["sips", "-s", "format", "png", "--resampleWidth", "1400", str(base / "report.pdf"), "--out", str(png)], check=True, capture_output=True)
-        page = Image.open(png).convert("RGBA")
-        white = Image.new("RGBA", page.size, "white"); white.alpha_composite(page); page = white
+        doc = fitz.open(base / "report.pdf")
+        pix = doc[0].get_pixmap(dpi=220, alpha=False)
+        page = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGBA")
         page = page.crop((0, 0, page.width, int(page.width * 0.62)))  # obere Hälfte: Kopf + Zusammenfassung
         place(c, page, 1500, 820, 220)
-        png.unlink()
     elif kind == "zoom":
-        src = Image.open(base / theme / f"{name}.png").convert("RGBA")
-        part = src.crop(ZOOM)
+        src = Image.open(base / theme / f"{name}@2x.png").convert("RGBA")
+        part = src.crop(tuple(v * 2 for v in ZOOM))
         # rechten Rand weich ausblenden (abgeschnittener Text)
-        bg = src.getpixel((ZOOM[2] - 2, ZOOM[1] + 2))
+        bg = src.getpixel((ZOOM[2] * 2 - 4, ZOOM[1] * 2 + 4))
         fade = Image.new("RGBA", part.size, (0, 0, 0, 0)); fd = ImageDraw.Draw(fade)
-        for i in range(90):
-            fd.line([(part.width - 90 + i, 0), (part.width - 90 + i, part.height)], fill=bg[:3] + (int(255 * i / 89),))
+        for i in range(180):
+            fd.line([(part.width - 180 + i, 0), (part.width - 180 + i, part.height)], fill=bg[:3] + (int(255 * i / 179),))
         part.alpha_composite(fade)
-        s = 1640 / part.width
+        s = 1640 / (part.width / 2)
         x, shot = place(c, part, 1640, 600, 250)
         d = ImageDraw.Draw(c)
         nx0, ny0, nx1, ny1 = (int(v * s) for v in NUMBER[lang])
         d.rounded_rectangle((x + nx0 - 14, 250 + ny0 - 4, x + nx1 + 14, 250 + ny1 + 8), 16, outline=GOLD, width=6)
-        # Erklärkarte darunter
-        y = 250 + shot.height + 70
-        fb, fr = font(FONT_BOLD, 54), font(FONT_REG, 34)
-        d.rounded_rectangle((140, y, W - 140, y + 230), 22, fill=(255, 255, 255, 240))
-        d.text((200, y + 56), ("Pfad in der Cloud zu lang" if lang == "de" else "Cloud path too long"), font=fb, fill=(180, 35, 24), anchor="lm")
-        d.text((200, y + 150), ("Pathrova schlägt einen kürzeren Namen vor – Revision und Endung bleiben erhalten."
-                                if lang == "de" else "Pathrova suggests a shorter name – revision and extension are kept."), font=fr, fill=(30, 34, 48), anchor="lm")
+        # Erklärkarte darunter: vorher → nachher
+        y = 250 + shot.height + 60
+        fb, fr = font(FONT_BOLD, 40), font(FONT_REG, 34)
+        before, after = CARD[lang]
+        d.rounded_rectangle((140, y, W - 140, y + 170), 22, fill=(255, 255, 255, 240))
+        d.text((190, y + 50), before, font=fr, fill=(180, 35, 24), anchor="lm")
+        d.text((190, y + 118), after, font=fb, fill=(14, 111, 115), anchor="lm")
     else:
         src = Image.open(base / theme / f"{name}.png").convert("RGBA")
         place(c, src, 1640, 820, 220)

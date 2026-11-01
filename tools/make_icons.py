@@ -19,22 +19,21 @@ def draw(small=False):
     white = (255, 255, 255, 255)
     soft = (178, 226, 223, 255)
     gold = (255, 196, 92, 255)
-    red = (240, 98, 80, 255)
+    red = (214, 69, 69, 255)
     dark = (8, 52, 54, 255)
-    limit_x = S * (0.70 if small else 0.66)
-    y = S * (0.5 if small else 0.42)
-    w = int(S * (0.10 if small else 0.05))
-    r = S * (0.105 if small else 0.068)
-    xs = [S * 0.22, S * 0.45] if small else [S * 0.2, S * 0.36, S * 0.52]
-    over = S * (0.82 if small else 0.78)
+    limit_x = S * (0.70 if small else 0.665)
+    y = S * 0.5
+    w = int(S * (0.10 if small else 0.06))
+    r = S * (0.105 if small else 0.072)
+    xs = [S * 0.22, S * 0.45] if small else [S * 0.21, S * 0.37, S * 0.53]
+    over = S * (0.82 if small else 0.79)
     d.line([(xs[0], y), (over, y)], fill=white if small else soft, width=w)
     for x in xs:
         d.ellipse((x - r, y - r, x + r, y + r), fill=white)
     d.ellipse((over - r, y - r, over + r, y + r), fill=red)
     bar = S * (0.06 if small else 0.045)
-    d.rounded_rectangle((limit_x - bar / 2, y - S * (0.3 if small else 0.2), limit_x + bar / 2, y + S * (0.3 if small else 0.17)), radius=bar / 2, fill=gold)
-    if small:
-        return img
+    d.rounded_rectangle((limit_x - bar / 2, y - S * (0.3 if small else 0.24), limit_x + bar / 2, y + S * (0.3 if small else 0.24)), radius=bar / 2, fill=gold)
+    return img
     cx, cy, R = S * 0.74, S * 0.76, S * 0.13
     ring = R * 0.14
     d.ellipse((cx - R - ring, cy - R - ring, cx + R + ring, cy + R + ring), fill=(14, 111, 115, 255))

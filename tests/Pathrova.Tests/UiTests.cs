@@ -104,20 +104,36 @@ public class UiTests
             var w = await Scanned(d, english);
             w.ShowFolderText();
             Save(w, Path.Combine(dir, "1-overview.png"));
-            if (!dark) w.ExportTo(Path.Combine(dir, "..", "report.pdf"));
             var g = w.Groups.ItemsSource!.Cast<object>().First(x => x.ToString()!.Contains(english ? "Label = Warnings" : "Label = Warnungen"));
             w.Groups.SelectedItem = g; Dispatcher.UIThread.RunJobs();
             Save(w, Path.Combine(dir, "2-warnings.png"));
             w.ExpandOptions(); w.Groups.SelectedIndex = 0; Dispatcher.UIThread.RunJobs();
             Save(w, Path.Combine(dir, "3-rules.png"));
-            var rw = new RenameWindow(w.Plan.ToList(), Texts.For(english), w.Result!.Root) { Width = 1100, Height = 610 };
+            var rw = new RenameWindow(w.Plan.ToList(), Texts.For(english), w.Result!.Root) { Width = 1100, Height = 560 };
             rw.Show(); Dispatcher.UIThread.RunJobs();
             Save(rw, Path.Combine(dir, "4-rename-preview.png"));
-            rw.Close(); w.Close();
+            rw.Close();
+            w.ExpandOptions(false); w.Groups.SelectedIndex = 0; Dispatcher.UIThread.RunJobs();
+            if (!dark) Save2x(w, Path.Combine(dir, "1-overview@2x.png"));
+            // Bericht erst nach allen Aufnahmen (die Statuszeile zeigt danach den Speicherpfad).
+            if (!dark) w.ExportTo(Path.Combine(dir, "..", "report.pdf"));
+            w.Close();
             Ui.DisplayPath = p => p; Reports.DisplayPath = p => p;
         }
         Avalonia.Application.Current!.RequestedThemeVariant = ThemeVariant.Default;
         Assert.True(File.Exists(Path.Combine(outDir, "de", "light", "4-rename-preview.png")));
+    }
+
+    /// <summary>Scharfe Aufnahme in doppelter Auflösung (für Nahaufnahmen in den Store-Bildern).</summary>
+    private static void Save2x(Window w, string path)
+    {
+        var content = (Control)w.Content!;
+        w.Content = null;
+        var wrap = new LayoutTransformControl { LayoutTransform = new Avalonia.Media.ScaleTransform(2, 2), Child = content };
+        w.Content = wrap; w.Width = 2732; w.Height = 1640;
+        Save(w, path);
+        wrap.Child = null; w.Content = content; w.Width = 1366; w.Height = 820;
+        Dispatcher.UIThread.RunJobs();
     }
 
     private static void Save(Window w, string path)
