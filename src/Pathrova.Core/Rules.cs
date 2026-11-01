@@ -163,7 +163,7 @@ public static class Rules
         {
             words.RemoveAt(words.Count - 1);
             var cand = string.Concat(words).TrimEnd('-', '_', '.', ',') + (keepTail is null ? "" : (keepTail[0] is ' ' or '-' ? keepTail : " " + keepTail));
-            if (cand.Length >= 8 && ok(cand)) return cand;
+            if (cand.Length >= 8 && !EndsWithFiller(words) && ok(cand)) return cand;
         }
         // Ein einziges langes Wort: Zeichen von hinten abschneiden.
         var one = words.Count == 1 ? words[0].TrimStart(' ', '-') : s;
@@ -176,6 +176,12 @@ public static class Rules
         }
         return "";
     }
+
+    private static readonly HashSet<string> Fillers = new(StringComparer.OrdinalIgnoreCase)
+        { "and", "or", "by", "of", "the", "a", "to", "for", "with", "from", "und", "oder", "von", "vom", "der", "die", "das", "den", "mit", "für", "zu", "zum", "zur", "im", "in", "an", "am", "auf", "et", "de", "du", "le", "la" };
+
+    /// <summary>Kürzungen sollen nicht auf „und“, „by“ usw. enden.</summary>
+    private static bool EndsWithFiller(List<string> words) => words.Count > 1 && Fillers.Contains(words[^1].TrimStart(' ', '-'));
 
     public static (string Stem, string Ext) Split(string name, bool isDirectory)
     {

@@ -14,7 +14,7 @@ public static class DemoData
         }
         string projects = english ? "Projects/2024/Customer Müller & Sons – Office building renovation/Planning documents and approvals from the building authority"
                                   : "Projekte/2024/Kunde Müller & Söhne – Sanierung Bürogebäude Hauptstraße/Planungsunterlagen und Genehmigungen vom Bauamt";
-        string deep = projects + (english ? "/Revised drawings after second inspection appointment with structural engineer/Final versions approved"
+        string deep = projects + (english ? "/Revised drawings after the second on-site inspection appointment with the structural engineer/Final versions approved"
                                           : "/Überarbeitete Zeichnungen nach zweitem Ortstermin mit Statiker und Brandschutz/Endgültige freigegebene Fassungen");
         F(deep + (english ? "/Ground floor plan – revision 7 – approved by client and authority.pdf" : "/Grundriss Erdgeschoss – Revision 7 – freigegeben von Bauherr und Behörde.pdf"));
         F(deep + (english ? "/Sections A-A and B-B – revision 4.pdf" : "/Schnitte A-A und B-B – Revision 4.pdf"));

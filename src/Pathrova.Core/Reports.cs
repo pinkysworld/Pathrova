@@ -66,7 +66,7 @@ public static class Reports
         var all = issues.ToList();
         if (all.Count == 0) Add(t.NoIssues, 11, ink);
         foreach (var g in all.GroupBy(i => i.Kind).OrderBy(g => g.Key))
-            lines.Add(new SummaryRow($"{t.Severity(Rules.SeverityOf(g.Key))} · {t.Kind(g.Key)}", Format.Number(g.Sum(i => 1L + i.Inside), english), Col(Rules.SeverityOf(g.Key))));
+            lines.Add(new SummaryRow($"{t.Severity(Rules.SeverityOf(g.Key))} · {t.Kind(g.Key)}", CountText(g, t, english), Col(Rules.SeverityOf(g.Key))));
         lines.Add(new Gap(12));
         int shown = 0;
         foreach (var g in all.GroupBy(i => i.Kind).OrderBy(g => g.Key))
@@ -141,6 +141,14 @@ public static class Reports
             doc.EndPage();
         }
         doc.Close();
+    }
+
+    /// <summary>Einträge wie in der App; zusammengefasste Unterelemente in Klammern.</summary>
+    private static string CountText(IEnumerable<Issue> g, Texts t, bool english)
+    {
+        var list = g.ToList();
+        long inside = list.Sum(i => (long)i.Inside);
+        return Format.Number(list.Count, english) + (inside > 0 ? $" ({t.AndInside((int)Math.Min(inside, int.MaxValue))})" : "");
     }
 
     /// <summary>Bricht an Leerzeichen oder Pfadtrennern um, notfalls mitten im Wort.</summary>

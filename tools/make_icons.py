@@ -21,17 +21,17 @@ def draw(small=False):
     gold = (255, 196, 92, 255)
     red = (214, 69, 69, 255)
     dark = (8, 52, 54, 255)
-    limit_x = S * (0.70 if small else 0.665)
+    limit_x = S * (0.70 if small else 0.645)
     y = S * 0.5
-    w = int(S * (0.10 if small else 0.06))
+    w = int(S * (0.10 if small else 0.075))
     r = S * (0.105 if small else 0.072)
-    xs = [S * 0.22, S * 0.45] if small else [S * 0.21, S * 0.37, S * 0.53]
-    over = S * (0.82 if small else 0.79)
+    xs = [S * 0.22, S * 0.45] if small else [S * 0.19, S * 0.35, S * 0.51]
+    over = S * (0.82 if small else 0.77)
     d.line([(xs[0], y), (over, y)], fill=white if small else soft, width=w)
     for x in xs:
         d.ellipse((x - r, y - r, x + r, y + r), fill=white)
     d.ellipse((over - r, y - r, over + r, y + r), fill=red)
-    bar = S * (0.06 if small else 0.045)
+    bar = S * (0.06 if small else 0.055)
     d.rounded_rectangle((limit_x - bar / 2, y - S * (0.3 if small else 0.24), limit_x + bar / 2, y + S * (0.3 if small else 0.24)), radius=bar / 2, fill=gold)
     return img
     cx, cy, R = S * 0.74, S * 0.76, S * 0.13

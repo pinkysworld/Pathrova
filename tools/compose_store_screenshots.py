@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 ROOT = Path(__file__).resolve().parent.parent
 W, H = 1920, 1080
 TEAL, TEAL_DARK, GOLD = (14, 111, 115), (8, 70, 73), (255, 196, 92)
-EN_NUMBER = 418  # erste Zeile der englischen Demodaten (Aufnahme 1-overview)
+EN_NUMBER = 440  # erste Zeile der englischen Demodaten (Aufnahme 1-overview)
 
 SYS = Path("/System/Library/Fonts/Supplemental")
 FONT_BOLD, FONT_REG = (SYS / "Arial Bold.ttf").read_bytes(), (SYS / "Arial.ttf").read_bytes()
@@ -35,8 +35,8 @@ ZOOM = (365, 308, 1000, 474)   # erste zwei Zeilen der Liste in 1-overview (1366
 NUMBER = {"de": (556 - 365, 330 - 308, 606 - 365, 349 - 308), "en": (559 - 365, 330 - 308, 609 - 365, 349 - 308)}  # Zahl innerhalb von ZOOM
 
 CARD = {
-    "de": ("Grundriss Erdgeschoss – Revision 7 – freigegeben von Bauherr und Behörde.pdf", "→ Grundriss Erdgeschoss-Revision 7-freigegeben.pdf   (passt)"),
-    "en": ("Ground floor plan – revision 7 – approved by client and authority.pdf", "→ Ground floor plan-revision 7-approved by client and authority.pdf   (fits)"),
+    "de": ("Grundriss Erdgeschoss – Revision 7 – freigegeben von Bauherr und Behörde.pdf", "→ Grundriss Erdgeschoss-Revision 7-freigegeben.pdf", "passt"),
+    "en": ("Ground floor plan – revision 7 – approved by client and authority.pdf", "→ Ground floor plan-revision 7-approved by client.pdf", "fits"),
 }
 
 def background():
@@ -94,14 +94,21 @@ def compose(lang, item, number=None):
         nx0, ny0, nx1, ny1 = (int(v * s) for v in NUMBER[lang])
         d.rounded_rectangle((x + nx0 - 14, 250 + ny0 - 4, x + nx1 + 14, 250 + ny1 + 8), 16, outline=GOLD, width=6)
         # Erklärkarte darunter: vorher → nachher
-        y = 250 + shot.height + 60
-        fb, fr = font(FONT_BOLD, 40), font(FONT_REG, 34)
-        before, after = CARD[lang]
-        d.rounded_rectangle((140, y, W - 140, y + 170), 22, fill=(255, 255, 255, 240))
-        d.text((190, y + 50), before, font=fr, fill=(180, 35, 24), anchor="lm")
-        d.text((190, y + 118), after, font=fb, fill=(14, 111, 115), anchor="lm")
+        y = H - 80 - 230
+        fb, fr, fc = font(FONT_BOLD, 40), font(FONT_REG, 34), font(FONT_BOLD, 30)
+        before, after, ok = CARD[lang]
+        d.rounded_rectangle((140, y, W - 140, y + 230), 22, fill=(255, 255, 255, 245))
+        d.text((190, y + 62), before, font=fr, fill=(180, 35, 24), anchor="lm")
+        d.text((190, y + 150), after, font=fb, fill=(14, 111, 115), anchor="lm")
+        # grüner Chip mit gezeichnetem Haken
+        tw = d.textlength(after, font=fb)
+        cx0 = 190 + tw + 30; cw = d.textlength(ok, font=fc) + 90
+        d.rounded_rectangle((cx0, y + 124, cx0 + cw, y + 176), 26, fill=(224, 241, 228))
+        d.line([(cx0 + 24, y + 151), (cx0 + 36, y + 163), (cx0 + 56, y + 139)], fill=(46, 125, 70), width=7, joint="curve")
+        d.text((cx0 + 70, y + 150), ok, font=fc, fill=(46, 125, 70), anchor="lm")
     else:
-        src = Image.open(base / theme / f"{name}.png").convert("RGBA")
+        hi = base / theme / f"{name}@2x.png"
+        src = Image.open(hi if hi.exists() else base / theme / f"{name}.png").convert("RGBA")
         place(c, src, 1640, 820, 220)
     return c.convert("RGB")
 
