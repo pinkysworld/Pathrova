@@ -12,7 +12,7 @@ Preis: 14,99 € mit 7-Tage-Testversion (Store) und Kaufkraftstaffel (siehe `doc
 
 Hinweis an die Zertifizierung: „Pathrova ist eine Offline-App ohne Konto. Zum Test einen beliebigen Ordner wählen (z. B. Dokumente) und ‚Prüfen‘ klicken. Die App ändert nichts, solange der Nutzer Umbenennungen nicht in der Vorschau bestätigt; jede Umbenennung lässt sich rückgängig machen. runFullTrust wird für den Dateisystemzugriff einer Win32-(.NET-)Desktop-App benötigt.“
 
-**Store-Bilder (hochladen, in dieser Reihenfolge):** `store/screenshots/{de,en}/marketing/1–5` (1920 × 1080 mit Überschrift: Überblick, Umbenennen mit Rückgängig, Nahaufnahme 461/400 bzw. 418/400, PDF-Bericht, Fehler/Warnungen dunkel). Erzeugt mit `tools/compose_store_screenshots.py` aus den Roh-Aufnahmen `store/screenshots/{de,en}/{light,dark}/` (1366 × 820, aus den UI-Tests).
+**Store-Bilder (hochladen, in dieser Reihenfolge):** `store/screenshots/{de,en}/marketing/1–5` (1920 × 1080 mit Überschrift: Überblick, Umbenennen mit Rückgängig, Nahaufnahme 461/400 bzw. 440/400, PDF-Bericht, Fehler/Warnungen dunkel). Erzeugt mit `tools/compose_store_screenshots.py` aus den Roh-Aufnahmen `store/screenshots/{de,en}/{light,dark}/` (1366 × 820, aus den UI-Tests).
 
 ---
 

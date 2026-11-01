@@ -12,14 +12,22 @@ Stand: 01.11.2026. Nichts reserviert, eingereicht oder veröffentlicht.
   - Umbenennen mit Vorschau, Auswahl, Bestätigung, Konfliktlösung und Rückgängig-Protokoll (JSON im App-Datenordner)
   - Export als CSV und PDF
   - Deutsch und Englisch, hell und dunkel, offline, `--selftest`
-- **Tests:** `~/.dotnet/dotnet test Pathrova.slnx` → 45/45 grün (Regeln, Zählung URL-kodiert, Scan mit 20.000 Dateien, Symlinks, Abbruch, Umbenennen + Rückgängig, Konflikte, Kürzen, CSV/PDF, UI headless, Screenshots).
+- **Tests:** `~/.dotnet/dotnet test Pathrova.slnx` → 47/47 grün (Regeln, Zählung URL-kodiert, Scan mit 20.000 Dateien, Symlinks, Abbruch, Umbenennen + Rückgängig, Konflikte, Kürzen, CSV/PDF, UI headless, Screenshots).
 - **Icon:** eigenes Motiv (Pfadbaum mit Prüfplakette), `tools/make_icons.py`, alle MSIX-/Store-Größen.
 - **Screenshots:** `store/screenshots/{de,en}/{light,dark}/1–4` (1366 × 820).
 - **Store-Texte:** `store/STORE_TEXTE.md` (DE + EN, ohne Microsoft-Marken im Titel, mit Markenhinweis).
 - **Webseite:** `website/` (Landingpage + Datenschutz, DE/EN, lokal geprüft auf Handybreite). Nicht veröffentlicht.
 - **Windows-Builds:** `artifacts/publish/win-x64` und `win-arm64` (self-contained, Single-File).
 
+## Windows (01.11.2026, nach Art Review Runde 5)
+- `tools/windows_check.sh`: Selbsttest x64 PASS (echte Pfade > 260 Zeichen, Umbenennen, Rückgängig, PDF), Fenster startet, MSIX-Bundle gebaut, **WACK x64 PASS**.
+- Bundle: `artifacts/msix/Pathrova_1.0.0.0.msixbundle` (x64 + ARM64, Identity vorläufig `MinhStudios.Pathrova`).
+
+## Chief Art Review (unabhängiger Prüfer, 5 Runden)
+5 → 7 → 7,5 → 8 → **8,5/10** (Icon 9, UI 8,5, Store-Bilder 8,5, Webseite 8,5, Kurzbeschreibung 9). Laut Prüfer hängt die 10 an Dingen nach dem Start (echtes Store-Badge, Bewertungen).
+Umgesetzt: neues Icon „Pfad trifft Grenze“ mit eigener 16–32-px-Fassung, KPI-Leiste, Leerzustand, Stufensymbole, zeichengenauer Diff in der Vorschau, behutsames Kürzen (Versionsnummern bleiben, keine Füllwörter am Ende), PDF mit Kopfband und gleicher Zählweise wie die App, 5 Marketing-Bilder je Sprache (`store/screenshots/{de,en}/marketing/`, `tools/compose_store_screenshots.py`), Webseite mit Nutzenpunkten, Chips und Store-Platzhalter (Handy 375 px geprüft).
+Offen aus dem Review (klein): Diff-Chip „·–·“ bei 13 px schwer lesbar; keine Hover-/Fokuszustände in den Bildern.
+
 ## Offen
-- **MSIX bauen + WACK:** Der Windows-PC (192.168.0.182) war am 01.11. nicht erreichbar (Host down). Sobald er läuft: `tools/windows_check.sh` (Selbsttest, Fensterstart, MSIX-Bundle, WACK x64).
 - Nach OK: Namen im Partner Center reservieren, Identity übernehmen, neu bauen, Webseite als `pinkysworld/Pathrova` veröffentlichen, einreichen (gestaffelt, nicht vor Mitte November).
 - Nicht geprüft: Bedienung am Windows-Bildschirm, ARM64 auf echter Hardware, echte Windows-Pfade > 260 Zeichen (deckt der Selbsttest ab, sobald er auf Windows läuft).
