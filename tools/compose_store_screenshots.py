@@ -18,17 +18,17 @@ def font(data, size): return ImageFont.truetype(io.BytesIO(data), size)
 TEXT = {
     "de": [
         ("1-overview", "light", "Alle Pfadprobleme auf einen Blick", "Vor dem Sync nach OneDrive oder SharePoint – in einem Durchgang statt Fehler für Fehler.", None),
-        ("4-rename-preview", "light", "Sicher umbenennen – mit Rückgängig", "Vorschau mit Auswahl. Ohne deine Bestätigung ändert sich nichts.", None),
+        ("2-rename", "light", "Sicher umbenennen – mit Rückgängig", "Vorschau mit Auswahl. Ohne deine Bestätigung ändert sich nichts.", None),
         ("1-overview", "light", "461 statt 400 Zeichen? Sofort sichtbar.", "Streng gezählt wie in der Cloud – und gleich ein Vorschlag, der passt.", "zoom"),
         ("report", "light", "Bericht für Kunden als PDF und CSV", "Zusammenfassung je Problemart, jede Fundstelle mit Pfad. Offline, ohne Konto.", "pdf"),
-        ("2-warnings", "dark", "Fehler, Warnungen, Hinweise – klar getrennt", "Hell oder dunkel. Filtern, suchen, im Explorer zeigen.", None),
+        ("1-overview", "dark", "Fehler, Warnungen, Hinweise – klar getrennt", "Hell oder dunkel. Nach Art gruppiert, filtern und suchen.", None),
     ],
     "en": [
         ("1-overview", "light", "Every path issue at a glance", "Before you sync to OneDrive or SharePoint – one pass instead of error by error.", None),
-        ("4-rename-preview", "light", "Rename safely – with undo", "Preview with selection. Nothing changes until you confirm.", None),
+        ("2-rename", "light", "Rename safely – with undo", "Preview with selection. Nothing changes until you confirm.", None),
         ("1-overview", "light", "{n} instead of 400 characters? Spotted.", "Counted strictly like the cloud – with a suggestion that fits.", "zoom"),
         ("report", "light", "Client-ready PDF and CSV reports", "Summary per issue type, every finding with its path. Offline, no account.", "pdf"),
-        ("2-warnings", "dark", "Errors, warnings, notes – clearly apart", "Light or dark. Filter, search, reveal in Explorer.", None),
+        ("1-overview", "dark", "Errors, warnings, notes – clearly apart", "Light or dark. Grouped by type, with filter and search.", None),
     ],
 }
 ZOOM = (365, 308, 1000, 474)   # erste zwei Zeilen der Liste in 1-overview (1366 × 820)
@@ -113,8 +113,9 @@ def compose(lang, item, number=None):
         d.line([(cx0 + 24, y + 151), (cx0 + 36, y + 163), (cx0 + 56, y + 139)], fill=(46, 125, 70), width=7, joint="curve")
         d.text((cx0 + 70, y + 150), ok, font=fc, fill=(46, 125, 70), anchor="lm")
     else:
+        win = ROOT / "store" / "screenshots" / "windows" / f"{lang}-{theme}" / f"{name}.png"  # echte Windows-Aufnahme, falls vorhanden
         hi = base / theme / f"{name}@2x.png"
-        src = Image.open(hi if hi.exists() else base / theme / f"{name}.png").convert("RGBA")
+        src = Image.open(win if win.exists() else hi if hi.exists() else base / theme / f"{name}.png").convert("RGBA")
         place(c, src, 1640, 820, 220)
     return c.convert("RGB")
 

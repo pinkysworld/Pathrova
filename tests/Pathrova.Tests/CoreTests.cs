@@ -238,6 +238,8 @@ public class ShortenTests
         Assert.Equal("Grundriss Erdgeschoss-Revision 7", Rules.Shorten("Grundriss Erdgeschoss – Revision 7 – freigegeben von Bauherr", n => n.Length <= 34));
         Assert.Equal("Bericht Quartal 2024", Rules.Shorten("Bericht Quartal sehr lang 2024", n => n.Length <= 20));
         Assert.Equal("", Rules.Shorten("abc defgh", n => n.Length <= 3));
+        Assert.Equal("", Rules.Shorten("Structural analysis final version", n => n.Length <= 9));
+        Assert.Equal("Bauplanungsun", Rules.Shorten("Bauplanungsunterlagen", n => n.Length <= 13));
         Assert.Equal("Ground floor plan approved by client", Rules.Shorten("Ground floor plan approved by client and authority", n => n.Length <= 40));
     }
 }

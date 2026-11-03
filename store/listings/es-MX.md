@@ -1,17 +1,19 @@
 # Pathrova – Ficha de Store es-MX
 
 **Títulos alternativos:**
-1. Pathrova – Verificador de longitud de rutas y nombres de archivo
+1. Pathrova – Verificador de rutas demasiado largas
 2. Pathrova – ¿Ruta muy larga? Revísala antes de migrar
 3. Pathrova – Detector de nombres de archivo inválidos
 
 ## Title
-Pathrova – Verificador de rutas demasiado largas
+Pathrova – Ruta demasiado larga: revisa rutas y nombres
 
 ## Short description
-Encuentra antes de migrar cada ruta demasiado larga y cada nombre inválido que OneDrive y SharePoint rechazarían: en una sola revisión, no error por error. Renombra con seguridad, con vista previa y deshacer, y genera un reporte en CSV o PDF. Sin internet ni cuenta. Prueba gratis por 7 días.
+¿Ruta demasiado larga? Detecta antes de la migración cada ruta demasiado larga y cada nombre de archivo no válido para OneDrive y SharePoint, en una sola pasada y no error por error. Cambia nombres con seguridad con vista previa y deshacer; reporte en CSV o PDF. Sin conexión, sin cuenta. Prueba gratuita de 7 días.
+
 
 ## Description
+¿Ruta demasiado larga? Pathrova detecta antes de migrar a OneDrive o SharePoint cada ruta demasiado larga y cada nombre de archivo no válido, en una sola pasada.
 El cliente de sincronización avisa de «ruta demasiado larga» o «nombre no válido» solo mientras sincroniza, un error a la vez; en un servidor de archivos con decenas de miles de carpetas puede tardar días.
 Pathrova revisa antes todo el árbol de carpetas en una sola pasada, muestra todos los problemas juntos y corrige los seguros con vista previa y deshacer. Pruébalo gratis por 7 días.
 
@@ -52,25 +54,29 @@ La interfaz de la app está disponible en alemán e inglés, con tema claro y os
 Nota: Pathrova revisa y reporta. No garantiza que una sincronización o migración vaya a funcionar; la configuración de tu organización puede ser distinta. Las reglas siguen la información publicada por Microsoft (a noviembre de 2026). Microsoft, OneDrive y SharePoint son marcas del grupo de empresas Microsoft. Pathrova es un producto independiente.
 
 ## Features
-1. Revisa árboles de carpetas completos en una pasada y muestra juntos todos los problemas de OneDrive y SharePoint
-2. Longitud de ruta: 400 (nube), 520 (sincronización) y 256 (Office), con conteo en codificación URL opcional
-3. Sugerencias seguras para renombrar con vista previa: nada cambia sin tu confirmación
-4. Registro para deshacer: cada renombrado se revierte con un clic
-5. Reportes en CSV y PDF para clientes, compañeros y documentación
-6. Rápido con más de 100,000 archivos, cancelable, funciona con discos USB y recursos de red
-7. Detecta caracteres no válidos, nombres reservados, espacios al inicio o al final y puntos finales
-8. Agrupado por tipo de problema (errores, advertencias, avisos), con filtros y búsqueda
-9. Tu propia lista de tipos de archivo bloqueados; avisa de archivos de más de 250 GB y de más de 300,000 elementos
-10. Sin internet, sin cuenta, sin telemetría. Prueba gratis por 7 días. Alemán e inglés, tema claro y oscuro
+1. Analiza árboles de carpetas completos en una pasada: «ruta demasiado larga» y nombres no válidos, antes de migrar a OneDrive o SharePoint
+2. Longitud de ruta: 400 caracteres (nube), 520 (ruta de sincronización local) y 256 (límite de Office), con recuento codificado como URL opcional
+3. Encuentra nombres de más de 255 caracteres y caracteres no válidos: " * : < > ? / \ | y caracteres de control
+4. Detecta nombres reservados como CON, PRN, AUX, NUL, COM0–9, LPT0–9, .lock, ~$…, _vti_ y «forms» en el nivel superior
+5. Avisa de espacios al principio o al final, puntos finales y caracteres # % ; & (bloqueados en algunas organizaciones)
+6. Sugerencias de cambio de nombre para cada problema corregible: sustituir caracteres, quitar espacios y acortar nombres largos entre palabras
+7. Vista previa con selección: no cambia nada hasta que lo confirmes
+8. Los conflictos de nombres en la misma carpeta se resuelven automáticamente, p. ej. «Nombre (2).docx»
+9. Registro para deshacer: cada cambio de nombre se revierte con un clic
+10. Exportación a CSV (lista para Excel, con sugerencias) e informe PDF con resumen por tipo de problema
+11. Una sola pasada incluso con más de 100 000 archivos y cancelable en cualquier momento; unidades locales, discos USB y recursos de red
+12. Resultados agrupados por tipo de problema (errores, advertencias, avisos), con filtros y búsqueda; una carpeta demasiado larga aparece una vez con su número de elementos
+13. Tu propia lista de tipos de archivo bloqueados; avisa también de archivos de más de 250 GB, más de 300 000 elementos, vínculos simbólicos, uniones y carpetas sin acceso
+14. Sin conexión, sin cuenta, sin telemetría, sin anuncios. Interfaz en alemán e inglés, tema claro y oscuro. Prueba gratuita de 7 días
 
 ## Search terms
-- ruta muy larga
-- nombre de archivo muy largo
+- ruta acceso muy larga
+- OneDrive ruta larga
 - error sincronización OneDrive
-- migración a SharePoint
-- caracteres inválidos archivo
-- ruta de destino muy larga
-- migrar servidor de archivos
+- migración SharePoint
+- caracteres no válidos
+- nombre de archivo largo
+- migración archivos
 
 ## What's new
 Primera versión.

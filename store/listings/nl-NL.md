@@ -1,17 +1,19 @@
 # Pathrova – Store-vermelding nl-NL
 
 **Alternatieve titels:**
-1. Pathrova – Padlengte- en bestandsnaamcontrole
+1. Pathrova – Controle op te lange paden
 2. Pathrova – Pad te lang? Controleer vóór de migratie
 3. Pathrova – Ongeldige bestandsnamen vinden en opschonen
 
 ## Title
-Pathrova – Controle op te lange paden
+Pathrova – Pad te lang? Controleer paden en bestandsnamen
 
 ## Short description
-Vindt vóór de migratie elk te lang pad en elke ongeldige naam die OneDrive en SharePoint weigeren, in één keer in plaats van fout voor fout. Veilig hernoemen met voorbeeld en ongedaan maken, rapport als CSV of PDF. Offline, zonder account. 7 dagen gratis proberen.
+Pad te lang? Vind vóór de migratie elk te lang pad en elke ongeldige bestandsnaam voor OneDrive en SharePoint – in één keer in plaats van fout voor fout. Veilig hernoemen met voorbeeld en ongedaan maken, rapport als CSV of PDF. Offline, zonder account. 7 dagen gratis proberen.
+
 
 ## Description
+Pad te lang? Pathrova vindt vóór de migratie naar OneDrive of SharePoint elk te lang pad en elke ongeldige bestandsnaam – in één keer.
 De synchronisatieclient meldt “pad te lang” of “ongeldige naam” pas tijdens het synchroniseren, steeds één fout tegelijk – bij een bestandsserver met tienduizenden mappen kan dat dagen kosten.
 Pathrova controleert vooraf de hele mapstructuur in één keer, toont alle problemen tegelijk en lost de veilige op met voorbeeld en ongedaan maken. 7 dagen gratis proberen.
 
@@ -52,25 +54,29 @@ De interface van de app is beschikbaar in het Duits en Engels, in een lichte en 
 Let op: Pathrova controleert en rapporteert. Het garandeert niet dat een synchronisatie of migratie slaagt; instellingen van je organisatie kunnen afwijken. De regels volgen de gepubliceerde informatie van Microsoft (stand november 2026). Microsoft, OneDrive en SharePoint zijn handelsmerken van de Microsoft-groep. Pathrova is een onafhankelijk product.
 
 ## Features
-1. Controleert complete mapstructuren in één keer en toont alle OneDrive- en SharePoint-problemen tegelijk
-2. Padlengte 400 (cloud), 520 (synchronisatie) en 256 (Office), desgewenst URL-gecodeerd geteld
-3. Veilige hernoemvoorstellen met voorbeeld: niets verandert zonder jouw bevestiging
-4. Logboek voor ongedaan maken: elke hernoeming draai je met één klik terug
-5. CSV- en pdf-rapporten voor klanten, collega's en documentatie
-6. Snel bij 100.000+ bestanden, te annuleren, werkt met USB-schijven en netwerkshares
-7. Vindt ongeldige tekens, gereserveerde namen, spaties aan begin of einde en punten aan het einde
-8. Gegroepeerd per soort probleem (fouten, waarschuwingen, opmerkingen), met filters en zoeken
-9. Eigen lijst met geblokkeerde bestandstypen; meldt bestanden boven 250 GB en meer dan 300.000 items
-10. Offline, geen account, geen telemetrie. 7 dagen gratis proberen. Duits en Engels, licht en donker
+1. Controleert complete mappenstructuren in één keer op „pad te lang“ en ongeldige namen – vóór de migratie naar OneDrive of SharePoint
+2. Padlengte: 400 tekens (cloud), 520 (lokaal synchronisatiepad) en 256 (Office-limiet), desgewenst strikt URL-gecodeerd geteld
+3. Vindt namen van meer dan 255 tekens en ongeldige tekens: " * : < > ? / \ | en stuurtekens
+4. Herkent gereserveerde namen zoals CON, PRN, AUX, NUL, COM0–9, LPT0–9, .lock, ~$…, _vti_ en „forms“ op het hoogste niveau
+5. Meldt spaties aan het begin of einde, punten aan het einde en de tekens # % ; & (in sommige organisaties geblokkeerd)
+6. Hernoemvoorstellen voor elk oplosbaar probleem: tekens vervangen, spaties verwijderen, lange namen bij woordgrenzen inkorten
+7. Voorbeeld met selectie: er verandert niets zonder jouw bevestiging
+8. Naamconflicten in dezelfde map worden automatisch opgelost, bijvoorbeeld met „Naam (2).docx“
+9. Logboek om ongedaan te maken: elke hernoeming draai je met één klik terug
+10. CSV-export (geschikt voor Excel, met voorstellen) en pdf-rapport met samenvatting per probleemsoort
+11. Eén keer scannen, ook bij 100.000+ bestanden en op elk moment te annuleren; lokale schijven, USB-schijven en netwerkshares
+12. Resultaten gegroepeerd per probleemsoort (fouten, waarschuwingen, opmerkingen), met filters en zoeken; een te lange map staat één keer in de lijst met het aantal items
+13. Je eigen lijst met geblokkeerde bestandstypen; meldt ook bestanden boven 250 GB, meer dan 300.000 items, symbolische links, junctions en mappen zonder toegang
+14. Offline, zonder account, zonder telemetrie, zonder advertenties. Interface in Duits en Engels, licht en donker. 7 dagen gratis proberen
 
 ## Search terms
-- pad te lang
-- bestandsnaam te lang
+- pad is te lang
+- OneDrive pad te lang
 - OneDrive synchronisatiefout
 - SharePoint migratie
 - ongeldige tekens bestandsnaam
-- het opgegeven pad is te lang
-- bestandsserver migratie
+- bestandsnaam te lang
+- migratie bestandsserver
 
 ## What's new
 Eerste versie.

@@ -1,17 +1,19 @@
 # Pathrova – Butiksinlägg sv-SE
 
 **Alternativa titlar:**
-1. Pathrova – Kontroll av sökvägslängd och filnamn
+1. Pathrova – Kontroll av för långa sökvägar
 2. Pathrova – För lång sökväg? Kontrollera före migreringen
 3. Pathrova – Hitta ogiltiga filnamn och städa upp
 
 ## Title
-Pathrova – Kontroll av för långa sökvägar
+Pathrova – Sökväg för lång? Kontrollera sökvägar och filnamn
 
 ## Short description
-Hittar före migreringen varje för lång sökväg och varje ogiltigt namn som OneDrive och SharePoint nekar – i ett svep i stället för fel för fel. Byt namn tryggt med förhandsgranskning och ångra, rapport som CSV eller PDF. Offline, inget konto. 7 dagars gratis provperiod.
+Sökväg för lång? Hitta före migreringen varje för lång sökväg och varje ogiltigt filnamn för OneDrive och SharePoint – i ett enda svep i stället för fel för fel. Byt namn säkert med förhandsvisning och ångra, rapport som CSV eller PDF. Offline, utan konto. Testa gratis i 7 dagar.
+
 
 ## Description
+Sökväg för lång? Pathrova hittar före migreringen till OneDrive eller SharePoint varje för lång sökväg och varje ogiltigt filnamn – i ett enda svep.
 Synkroniseringsklienten rapporterar ”sökvägen är för lång” och ”ogiltigt namn” först under synkroniseringen, ett fel i taget – på en filserver med tiotusentals mappar kan det ta flera dagar.
 Pathrova kontrollerar hela mappstrukturen i förväg i ett enda svep, visar alla problem på en gång och åtgärdar de säkra med förhandsgranskning och ångra. Prova gratis i 7 dagar.
 
@@ -52,25 +54,29 @@ Appens gränssnitt finns på tyska och engelska, i ljust och mörkt tema.
 Observera: Pathrova kontrollerar och rapporterar. Det garanterar inte att en synkronisering eller migrering lyckas; din organisations inställningar kan avvika. Reglerna följer Microsofts publicerade uppgifter (läge november 2026). Microsoft, OneDrive och SharePoint är varumärken som tillhör Microsofts företagsgrupp. Pathrova är en oberoende produkt.
 
 ## Features
-1. Kontrollerar hela mappstrukturer i ett svep och visar alla problem med OneDrive och SharePoint på en gång
-2. Sökvägslängd 400 (moln), 520 (synkronisering) och 256 (Office), på begäran URL-kodad räkning
-3. Säkra förslag på namnbyten med förhandsgranskning – inget ändras utan din bekräftelse
-4. Ångralogg: varje namnbyte kan återställas med ett klick
-5. CSV- och PDF-rapporter för kunder, kollegor och dokumentation
-6. Snabbt med 100 000+ filer, kan avbrytas, fungerar med USB-diskar och nätverksresurser
-7. Hittar ogiltiga tecken, reserverade namn, blanksteg i början eller slutet och punkter i slutet
-8. Grupperat efter problemtyp (fel, varningar, anmärkningar), med filter och sökning
-9. Din egen lista över blockerade filtyper; flaggar filer över 250 GB och fler än 300 000 objekt
-10. Offline, inget konto, ingen telemetri. 7 dagars gratis provperiod. Tyska och engelska, ljust och mörkt
+1. Kontrollerar hela mappträd i ett svep efter ”sökvägen är för lång” och ogiltiga namn – före migreringen till OneDrive eller SharePoint
+2. Sökvägslängd: 400 tecken (molnet), 520 (lokal synkroniseringssökväg) och 256 (Office-gräns), på begäran strikt URL-kodad räkning
+3. Hittar namn över 255 tecken och ogiltiga tecken: " * : < > ? / \ | samt styrtecken
+4. Upptäcker reserverade namn som CON, PRN, AUX, NUL, COM0–9, LPT0–9, .lock, ~$…, _vti_ och ”forms” på översta nivån
+5. Varnar för mellanslag i början eller slutet, punkt i slutet samt tecknen # % ; & (blockeras i vissa organisationer)
+6. Förslag på nya namn för varje åtgärdbart problem: byt ut tecken, ta bort mellanslag, korta långa namn vid ordgränser
+7. Förhandsvisning med urval: inget ändras utan din bekräftelse
+8. Namnkonflikter i samma mapp löses automatiskt, till exempel ”Namn (2).docx”
+9. Ångra-logg: varje namnbyte kan göras ogjort med ett klick
+10. CSV-export (Excel-klar, med förslag) och PDF-rapport med sammanfattning per problemtyp
+11. Ett enda svep även med 100 000+ filer, kan avbrytas när som helst; lokala enheter, USB-diskar och nätverksresurser
+12. Resultat grupperade efter problemtyp (fel, varningar, anmärkningar), med filter och sök; en för lång mapp visas en gång med antal objekt
+13. Egen lista över blockerade filtyper; flaggar även filer över 250 GB, fler än 300 000 objekt, symboliska länkar, korsningar och mappar utan åtkomst
+14. Offline, utan konto, utan telemetri, utan reklam. Gränssnitt på tyska och engelska, ljust och mörkt. Testa gratis i 7 dagar
 
 ## Search terms
 - sökvägen är för lång
-- filnamnet är för långt
+- OneDrive för lång sökväg
 - OneDrive synkroniseringsfel
 - SharePoint migrering
-- ogiltiga tecken i filnamn
-- målsökvägen är för lång
-- filserver migrering
+- ogiltiga tecken filnamn
+- filnamn för långt
+- migrering filserver
 
 ## What's new
 Första versionen.

@@ -44,8 +44,8 @@ public sealed class Texts
     public string BlockedHint => T("von deiner IT vorgegeben, z. B. exe; bat; mdb", "set by your IT, e.g. exe; bat; mdb");
     public string Scanning(long files, long folders) => T($"Prüfe … {Format.Number(files, false)} Dateien, {Format.Number(folders, false)} Ordner", $"Checking … {Format.Number(files, true)} files, {Format.Number(folders, true)} folders");
     public string Done(ScanResult r) => T(
-        $"{Format.Number(r.Files, false)} Dateien und {Format.Number(r.Folders, false)} Ordner in {r.Duration.TotalSeconds:0.0} s geprüft{(r.Cancelled ? " (abgebrochen, unvollständig)" : "")}.",
-        $"Checked {Format.Number(r.Files, true)} files and {Format.Number(r.Folders, true)} folders in {r.Duration.TotalSeconds:0.0} s{(r.Cancelled ? " (cancelled, incomplete)" : "")}.");
+        $"{Format.Number(r.Files, false)} Dateien und {Format.Number(r.Folders, false)} Ordner in {r.Duration.TotalSeconds.ToString("0.0", CultureInfo.GetCultureInfo("de-DE"))} s geprüft{(r.Cancelled ? " (abgebrochen, unvollständig)" : "")}.",
+        $"Checked {Format.Number(r.Files, true)} files and {Format.Number(r.Folders, true)} folders in {r.Duration.TotalSeconds.ToString("0.0", CultureInfo.InvariantCulture)} s{(r.Cancelled ? " (cancelled, incomplete)" : "")}.");
     public string Empty => T("Ordner, Laufwerk oder Netzwerkfreigabe oben wählen oder hierher ziehen und „Prüfen“ klicken. Beim Prüfen wird nichts verändert.", "Choose or drop a folder, drive or network share above and click “Check”. Checking changes nothing.");
     public string NoIssues => T("Keine Probleme gefunden.", "No issues found.");
     public string About => T("Über Pathrova", "About Pathrova");

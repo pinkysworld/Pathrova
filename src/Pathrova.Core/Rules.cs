@@ -165,8 +165,9 @@ public static class Rules
             var cand = string.Concat(words).TrimEnd('-', '_', '.', ',') + (keepTail is null ? "" : (keepTail[0] is ' ' or '-' ? keepTail : " " + keepTail));
             if (cand.Length >= 8 && !EndsWithFiller(words) && ok(cand)) return cand;
         }
-        // Ein einziges langes Wort: Zeichen von hinten abschneiden.
-        var one = words.Count == 1 ? words[0].TrimStart(' ', '-') : s;
+        // Nur ein einzelnes langes Wort wird zeichenweise gekürzt; mitten im Wort abgeschnittene Namen („Structura“) helfen niemandem.
+        if (s.Any(c => c is ' ' or '-')) return "";
+        var one = s;
         for (int n = one.Length - 1; n >= 8; n--)
         {
             var cand = one[..n];

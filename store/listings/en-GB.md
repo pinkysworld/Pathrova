@@ -1,17 +1,19 @@
 # Pathrova – Store listing en-GB
 
 **Alternative title descriptors:**
-1. Pathrova – File Path Length Checker for Admins
+1. Pathrova – Long Path & File Name Checker
 2. Pathrova – Find Long Paths & Illegal File Names
 3. Pathrova – Pre-Migration File Name Checker
 
 ## Title
-Pathrova – Long Path & File Name Checker
+Pathrova – Path Too Long & File Name Checker
 
 ## Short description
-Finds every over-long path and illegal file name that OneDrive and SharePoint will reject – before you migrate, in a single scan rather than error by error. Rename safely with preview and undo, then export a CSV or PDF report. Offline, no account. 7-day free trial.
+Find every “path too long” error and invalid file name before your OneDrive or SharePoint migration – in one pass instead of error by error. Rename safely with preview and undo, export a CSV or PDF report. Offline, no account. 7-day free trial.
+
 
 ## Description
+Path too long? Pathrova finds every too-long path and invalid file name before you migrate to OneDrive or SharePoint – in a single pass.
 The sync client only reports “path too long” and “invalid name” while it is syncing, one error at a time – on a file server with tens of thousands of folders, that can take days.
 Pathrova scans the whole folder tree beforehand in a single pass, lists every issue at once and fixes the safe ones with preview and undo. Try it free for 7 days.
 
@@ -52,24 +54,28 @@ The app interface is available in English and German, in light and dark themes.
 Note: Pathrova checks and reports. It does not guarantee that a sync or migration will succeed; your organisation's settings may differ. Rules follow Microsoft's published guidance (as of November 2026). Microsoft, OneDrive and SharePoint are trademarks of the Microsoft group of companies. Pathrova is an independent product.
 
 ## Features
-1. Scans whole folder trees in one pass and lists every OneDrive and SharePoint problem at once
-2. Path length 400 (cloud), 520 (sync) and 256 (Office), optionally counted URL-encoded
-3. Safe rename suggestions with preview – nothing changes without your confirmation
-4. Undo log: any rename can be reverted with one click
-5. CSV and PDF reports for clients, colleagues and documentation
-6. Fast with 100,000+ files, cancellable, works on USB disks and network shares
-7. Finds illegal characters, reserved names, leading/trailing spaces and trailing full stops
-8. Grouped by issue type (errors, warnings, notes), with filters and search
-9. Your own list of blocked file types; flags files over 250 GB and more than 300,000 items
-10. Offline, no account, no telemetry. 7-day free trial. English and German, light and dark
+1. Scans entire folder trees in one pass for “path too long” errors and invalid names – before your OneDrive or SharePoint migration
+2. Path length: 400 characters (cloud), 520 (local sync path) and 256 (Office limit), optionally counted strictly URL-encoded
+3. Finds names over 255 characters and invalid characters: " * : < > ? / \ | and control characters
+4. Detects reserved names such as CON, PRN, AUX, NUL, COM0–9, LPT0–9, .lock, ~$…, _vti_ and “forms” at the top level
+5. Flags leading or trailing spaces, trailing dots, and # % ; & characters (blocked in some organizations)
+6. Rename suggestions for every fixable issue: replace characters, trim spaces, shorten long names at word boundaries
+7. Preview with selection: nothing changes until you confirm
+8. Name clashes in the same folder are resolved automatically, e.g. “Name (2).docx”
+9. Undo log: every rename can be reverted with one click
+10. CSV export (Excel-ready, with suggestions) and PDF report with a summary per issue type
+11. One pass even for 100,000+ files, cancel at any time; local drives, USB disks and network shares
+12. Results grouped by issue type (errors, warnings, notes) with filters and search; a too-long folder is listed once with its item count
+13. Your own list of blocked file types; also flags files over 250 GB, over 300,000 items, symlinks, junctions and folders without access
+14. Offline, no account, no telemetry, no ads. English and German interface, light and dark. 7-day free trial
 
 ## Search terms
-- path too long
-- filename too long
+- long file path
+- OneDrive path too long
 - OneDrive sync errors
 - SharePoint migration
-- illegal characters filename
-- long file path fix
+- illegal characters
+- filename too long
 - file server migration
 
 ## What's new

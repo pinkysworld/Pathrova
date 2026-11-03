@@ -1,17 +1,19 @@
 # Pathrova – Wpis w Store pl-PL
 
 **Alternatywne tytuły:**
-1. Pathrova – Kontrola długości ścieżek i nazw plików
+1. Pathrova – Sprawdzanie zbyt długich ścieżek
 2. Pathrova – Ścieżka za długa? Sprawdź przed migracją
 3. Pathrova – Wykrywanie niedozwolonych nazw plików
 
 ## Title
-Pathrova – Sprawdzanie zbyt długich ścieżek
+Pathrova – Za długa ścieżka? Sprawdź ścieżki i nazwy plików
 
 ## Short description
-Znajduje przed migracją każdą zbyt długą ścieżkę i każdą niedozwoloną nazwę, które odrzuci OneDrive i SharePoint – jednym przebiegiem, a nie błąd po błędzie. Bezpieczna zmiana nazw z podglądem i cofaniem, raport w CSV lub PDF. Offline, bez konta. 7 dni za darmo.
+Za długa ścieżka? Znajdź przed migracją każdą zbyt długą ścieżkę i każdą niepoprawną nazwę pliku dla OneDrive i SharePoint – w jednym przebiegu, a nie błąd po błędzie. Bezpieczna zmiana nazw z podglądem i cofaniem, raport CSV lub PDF. Offline, bez konta. 7 dni za darmo.
+
 
 ## Description
+Za długa ścieżka? Pathrova znajduje przed migracją do OneDrive lub SharePoint każdą zbyt długą ścieżkę i każdą niepoprawną nazwę pliku – w jednym przebiegu.
 Klient synchronizacji zgłasza „ścieżka jest za długa” lub „nieprawidłowa nazwa” dopiero w trakcie synchronizacji, po jednym błędzie naraz – na serwerze plików z dziesiątkami tysięcy folderów może to zająć całe dni.
 Pathrova sprawdza wcześniej całe drzewo folderów jednym przebiegiem, pokazuje wszystkie problemy naraz i naprawia bezpieczne z podglądem i cofaniem. Wypróbuj za darmo przez 7 dni.
 
@@ -52,24 +54,28 @@ Interfejs aplikacji jest dostępny w języku niemieckim i angielskim, w jasnym i
 Uwaga: Pathrova sprawdza i raportuje. Nie gwarantuje, że synchronizacja lub migracja się powiedzie; ustawienia Twojej organizacji mogą się różnić. Reguły odpowiadają opublikowanym informacjom firmy Microsoft (stan na listopad 2026). Microsoft, OneDrive i SharePoint są znakami towarowymi grupy firm Microsoft. Pathrova jest produktem niezależnym.
 
 ## Features
-1. Sprawdza całe drzewa folderów jednym przebiegiem i pokazuje naraz wszystkie problemy z OneDrive i SharePoint
-2. Długość ścieżki 400 (chmura), 520 (synchronizacja) i 256 (Office), opcjonalnie liczona w kodowaniu URL
-3. Bezpieczne propozycje zmiany nazw z podglądem – nic się nie zmieni bez Twojego potwierdzenia
-4. Dziennik cofania: każdą zmianę nazwy cofniesz jednym kliknięciem
-5. Raporty CSV i PDF dla klientów, kolegów i dokumentacji
-6. Szybki przy 100 000+ plików, z możliwością przerwania, działa z dyskami USB i udziałami sieciowymi
-7. Znajduje niedozwolone znaki, nazwy zastrzeżone, spacje na początku lub końcu oraz kropki na końcu
-8. Grupowanie według rodzaju problemu (błędy, ostrzeżenia, uwagi), z filtrami i wyszukiwarką
-9. Własna lista zablokowanych typów plików; wskazuje pliki powyżej 250 GB i ponad 300 000 elementów
-10. Offline, bez konta, bez telemetrii. 7 dni za darmo. Niemiecki i angielski, motyw jasny i ciemny
+1. Sprawdza całe drzewa folderów w jednym przebiegu pod kątem „za długiej ścieżki” i niepoprawnych nazw – przed migracją do OneDrive lub SharePoint
+2. Długość ścieżki: 400 znaków (chmura), 520 (lokalna ścieżka synchronizacji) i 256 (limit Office), opcjonalnie liczona ściśle w kodowaniu URL
+3. Wykrywa nazwy dłuższe niż 255 znaków oraz niedozwolone znaki: " * : < > ? / \ | i znaki sterujące
+4. Rozpoznaje nazwy zastrzeżone, takie jak CON, PRN, AUX, NUL, COM0–9, LPT0–9, .lock, ~$…, _vti_ i „forms” na najwyższym poziomie
+5. Zgłasza spacje na początku lub końcu, kropki na końcu oraz znaki # % ; & (w niektórych organizacjach blokowane)
+6. Propozycje zmiany nazw dla każdego problemu do naprawienia: zamiana znaków, usuwanie spacji, skracanie długich nazw na granicach słów
+7. Podgląd z wyborem: nic się nie zmieni bez Twojego potwierdzenia
+8. Konflikty nazw w tym samym folderze są rozwiązywane automatycznie, np. „Nazwa (2).docx”
+9. Dziennik cofania: każdą zmianę nazwy cofniesz jednym kliknięciem
+10. Eksport CSV (gotowy dla Excela, z propozycjami) i raport PDF z podsumowaniem według rodzaju problemu
+11. Jeden przebieg nawet przy ponad 100 000 plików, z możliwością przerwania; dyski lokalne, dyski USB i udziały sieciowe
+12. Wyniki pogrupowane według rodzaju problemu (błędy, ostrzeżenia, uwagi), z filtrami i wyszukiwaniem; zbyt długi folder pojawia się raz z liczbą elementów
+13. Własna lista blokowanych typów plików; zgłasza też pliki powyżej 250 GB, ponad 300 000 elementów, dowiązania symboliczne, punkty połączenia i foldery bez dostępu
+14. Offline, bez konta, bez telemetrii, bez reklam. Interfejs po niemiecku i angielsku, jasny i ciemny motyw. 7 dni za darmo
 
 ## Search terms
-- ścieżka za długa
-- nazwa pliku zbyt długa
+- ścieżka docelowa za długa
+- OneDrive długa ścieżka
 - błąd synchronizacji OneDrive
 - migracja SharePoint
-- niedozwolone znaki w nazwie
-- ścieżka docelowa za długa
+- niedozwolone znaki
+- nazwa pliku za długa
 - migracja serwera plików
 
 ## What's new
