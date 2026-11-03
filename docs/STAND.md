@@ -34,3 +34,6 @@ Offen aus dem Review (klein): Diff-Chip „·–·“ bei 13 px schwer lesbar; k
 
 ## Partner Center (01.11.2026)
 Store-ID 9NJN21Z01WPM, Identity `MinhStudios.Pathrova` (passt zum Bundle). Entwurf Submission 1 vollständig bis auf Paket: 12 Titel reserviert, 12 Einträge (store/listings), Preise B 11,99 € / C 8,48 € / D 394 ₹, IARC, Zertifizierungshinweis. Offen: Bundle hochladen und einreichen – bewusst gestaffelt, wartet auf OK des Nutzers.
+
+## Eingereicht (03.11.2026)
+Submission 1 in Zertifizierung. 12 neue ASO-Titel reserviert, Listings mit 14 Funktionen/7 Suchbegriffen, echte Windows-Screenshots, Support mip@gmx.biz, Datenschutz-URL, runFullTrust-Begründung. Website live mit Store-Badge, Sitemap https://minh.systems/Pathrova/sitemap.xml.
